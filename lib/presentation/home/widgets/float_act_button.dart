@@ -1,5 +1,5 @@
+import 'package:drobee/presentation/addBottomSheet/widgets/photo_picker_box.dart';
 import 'package:flutter/material.dart';
-import 'package:drobee/presentation/addBottomSheet/pages/add_bottom_sheet_page.dart';
 
 class AddFloatingActionButton extends StatelessWidget {
   const AddFloatingActionButton({super.key});
@@ -12,7 +12,7 @@ class AddFloatingActionButton extends StatelessWidget {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => const PhotoPickerBox(),
+          builder: (context) => const PhotoPickerBottomSheet(),
         );
       },
       backgroundColor: Theme.of(context).primaryColor,
