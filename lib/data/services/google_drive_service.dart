@@ -178,10 +178,16 @@ class GoogleDriveService {
     }
   }
 
-  // Fotoğrafı Drive'a yükleme - Geliştirilmiş hata yönetimi
-  Future<bool> uploadImageToDrive(File imageFile, String fileName) async {
+  // Fotoğrafı Drive'a yükleme - Geliştirilmiş hata yönetimi ve callback eklendi
+  Future<bool> uploadImageToDrive(
+    File imageFile,
+    String fileName, {
+    Function(String)? onSuccess,
+    Function(String)? onError,
+  }) async {
     if (!_hasPermission) {
       print('Drive izni yok');
+      onError?.call('Drive izni yok. Lütfen önce Drive iznini verin.');
       return false;
     }
 
@@ -190,6 +196,7 @@ class GoogleDriveService {
       final hasPermission = await checkDrivePermission();
       if (!hasPermission) {
         print('Drive API yeniden başlatılamadı');
+        onError?.call('Drive API yeniden başlatılamadı.');
         return false;
       }
     }
@@ -211,6 +218,7 @@ class GoogleDriveService {
       print(
         'Dosya başarıyla yüklendi - ID: ${result.id}, Name: ${result.name}',
       );
+      onSuccess?.call('Fotoğraf başarıyla Drive\'a yüklendi!');
       return true;
     } catch (e) {
       print('Drive yükleme hatası: $e');
@@ -222,10 +230,16 @@ class GoogleDriveService {
         final renewed = await _renewToken();
         if (renewed) {
           // Tekrar dene
-          return uploadImageToDrive(imageFile, fileName);
+          return uploadImageToDrive(
+            imageFile,
+            fileName,
+            onSuccess: onSuccess,
+            onError: onError,
+          );
         }
       }
 
+      onError?.call('Drive yükleme hatası: $e');
       return false;
     }
   }

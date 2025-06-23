@@ -2,9 +2,12 @@ import 'dart:io';
 import 'package:drobee/common/widget/button/custom_button.dart';
 import 'package:drobee/core/configs/theme/app_colors.dart';
 import 'package:drobee/core/utils/app_flushbar.dart';
-import 'package:drobee/data/photo_picker_service.dart';
+import 'package:drobee/data/services/firebase_save_items.dart';
+import 'package:drobee/data/services/google_drive_service.dart';
+import 'package:drobee/data/services/photo_picker_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 class PhotoPickerBottomSheet extends StatefulWidget {
   const PhotoPickerBottomSheet({super.key});
@@ -16,7 +19,10 @@ class PhotoPickerBottomSheet extends StatefulWidget {
 class _PhotoPickerBottomSheetState extends State<PhotoPickerBottomSheet> {
   File? _selectedImage;
   bool _isLoading = false;
+  bool _isUploading = false;
   final List<String> _selectedWeathers = [];
+
+  final GoogleDriveService _driveService = GoogleDriveService();
 
   static const List<String> _weatherOptions = [
     "Sunny",
@@ -26,17 +32,29 @@ class _PhotoPickerBottomSheetState extends State<PhotoPickerBottomSheet> {
   ];
 
   Future<void> _pickImage(ImageSource source) async {
+    if (_isLoading) return;
+
     setState(() => _isLoading = true);
+    setState(() {
+      _selectedImage = null;
+      _selectedWeathers.clear();
+    });
 
     try {
-      final image = await PhotoPickerService.pickImage(source);
+      final image = await PhotoPickerService.pickImageWithBackgroundRemoval(
+        source,
+      );
+
       if (image != null && mounted) {
         setState(() => _selectedImage = image);
-        AppFlushbar.showSuccess(context, '✅ Fotoğraf başarıyla seçildi!');
+        AppFlushbar.showSuccess(
+          context,
+          'Photo processed and background removed!',
+        );
       }
     } catch (e) {
       if (mounted) {
-        AppFlushbar.showError(context, '❌ Hata: $e');
+        AppFlushbar.showError(context, 'Hata: $e');
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -53,10 +71,109 @@ class _PhotoPickerBottomSheetState extends State<PhotoPickerBottomSheet> {
     });
   }
 
-  void _handleSave() {
-    print("Seçilen hava etiketleri: $_selectedWeathers");
-    AppFlushbar.showSuccess(context, 'Kaydedildi.');
-    Navigator.pop(context);
+  Future<String?> _uploadToDrive() async {
+    if (_selectedImage == null) {
+      AppFlushbar.showError(context, 'Lütfen önce bir fotoğraf seçin.');
+      return null;
+    }
+
+    if (_isUploading) return null;
+
+    setState(() => _isUploading = true);
+
+    try {
+      final hasPermission = await _driveService.checkDrivePermission();
+      if (!hasPermission) {
+        final granted = await _driveService.requestDrivePermission();
+        if (!granted) {
+          AppFlushbar.showError(context, 'Google Drive izni verilmedi.');
+          return null;
+        }
+      }
+
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final extension = path.extension(_selectedImage!.path);
+      final fileName = 'background_removed_$timestamp$extension';
+
+      final String? uploadedFileId =
+          (await _driveService.uploadImageToDrive(
+                _selectedImage!,
+                fileName,
+                onSuccess: (msg) => debugPrint('Upload success: $msg'),
+                onError: (err) => debugPrint('Upload error: $err'),
+              ))
+              as String?;
+
+      if (uploadedFileId != null) {
+        debugPrint("Dosya ID: $uploadedFileId");
+        AppFlushbar.showSuccess(
+          context,
+          'Fotoğraf başarıyla Drive\'a yüklendi!',
+        );
+        debugPrint("Fotoğraf yüklendi: $fileName");
+        debugPrint("Etiketler: $_selectedWeathers");
+        return uploadedFileId;
+      } else {
+        AppFlushbar.showError(context, 'Yükleme başarısız oldu.');
+        return null;
+      }
+    } catch (e) {
+      AppFlushbar.showError(context, 'Yükleme hatası: $e');
+      return null;
+    } finally {
+      if (mounted) setState(() => _isUploading = false);
+    }
+  }
+
+  void _handleSave() async {
+    if (_selectedImage == null) {
+      AppFlushbar.showError(context, 'Lütfen bir fotoğraf seçin.');
+      return;
+    }
+
+    // Kullanıcı oturumunu kontrol et
+    if (!FirebasePhotoService.isUserLoggedIn()) {
+      AppFlushbar.showError(context, 'Lütfen önce giriş yapın.');
+      return;
+    }
+
+    final fileId = await _uploadToDrive();
+
+    if (mounted && !_isUploading && fileId != null) {
+      debugPrint("Yüklenen dosyanın ID'si: $fileId");
+
+      // Seçili olan chip'lerin listesi
+      final selectedChips = List<String>.from(_selectedWeathers);
+      debugPrint('Seçilen hava durumları: $selectedChips');
+
+      // Firebase'e kaydet
+      final saveSuccess = await FirebasePhotoService.savePhotoToFirebase(
+        imageId: fileId,
+        weatherTags: selectedChips,
+      );
+
+      if (saveSuccess) {
+        AppFlushbar.showSuccess(
+          context,
+          'Fotoğraf ve etiketler başarıyla kaydedildi!',
+        );
+
+        // İşlem bitince image ve chips'leri sıfırla
+        setState(() {
+          _selectedImage = null;
+          _selectedWeathers.clear();
+        });
+
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+      } else {
+        AppFlushbar.showError(
+          context,
+          'Fotoğraf kaydedilirken bir hata oluştu.',
+        );
+      }
+    }
   }
 
   @override
@@ -72,10 +189,7 @@ class _PhotoPickerBottomSheetState extends State<PhotoPickerBottomSheet> {
       ),
       child: Column(
         children: [
-          // Header
           _buildHeader(),
-
-          // Content
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -109,7 +223,9 @@ class _PhotoPickerBottomSheetState extends State<PhotoPickerBottomSheet> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              if (Navigator.canPop(context)) Navigator.pop(context);
+            },
             icon: const Icon(Icons.close),
           ),
         ],
@@ -250,6 +366,9 @@ class _PhotoPickerBottomSheetState extends State<PhotoPickerBottomSheet> {
   }
 
   Widget _buildSaveButton() {
-    return CustomButton(onTap: _handleSave, text: 'Save');
+    return CustomButton(
+      onTap: _isUploading ? () {} : _handleSave,
+      text: 'Save',
+    );
   }
 }
