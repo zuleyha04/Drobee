@@ -1,14 +1,13 @@
-import 'dart:io';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class GoogleDriveService {
-  static final GoogleDriveService _instance = GoogleDriveService._internal();
-  factory GoogleDriveService() => _instance;
-  GoogleDriveService._internal();
+class GoogleDriveAuth {
+  static final GoogleDriveAuth _instance = GoogleDriveAuth._internal();
+  factory GoogleDriveAuth() => _instance;
+  GoogleDriveAuth._internal();
 
   drive.DriveApi? _driveApi;
   GoogleSignIn? _googleSignIn;
@@ -178,74 +177,8 @@ class GoogleDriveService {
     }
   }
 
-  // Fotoğrafı Drive'a yükleme - Geliştirilmiş hata yönetimi ve callback eklendi
-  Future<bool> uploadImageToDrive(
-    File imageFile,
-    String fileName, {
-    Function(String)? onSuccess,
-    Function(String)? onError,
-  }) async {
-    if (!_hasPermission) {
-      print('Drive izni yok');
-      onError?.call('Drive izni yok. Lütfen önce Drive iznini verin.');
-      return false;
-    }
-
-    if (_driveApi == null) {
-      print('Drive API hazır değil, yeniden başlatılıyor...');
-      final hasPermission = await checkDrivePermission();
-      if (!hasPermission) {
-        print('Drive API yeniden başlatılamadı');
-        onError?.call('Drive API yeniden başlatılamadı.');
-        return false;
-      }
-    }
-
-    try {
-      print('Dosya yükleniyor: $fileName (${imageFile.lengthSync()} bytes)');
-
-      final driveFile = drive.File();
-      driveFile.name = fileName;
-      driveFile.parents = ['appDataFolder']; // Uygulamaya özel klasör kullan
-
-      final media = drive.Media(imageFile.openRead(), imageFile.lengthSync());
-
-      final result = await _driveApi!.files.create(
-        driveFile,
-        uploadMedia: media,
-      );
-
-      print(
-        'Dosya başarıyla yüklendi - ID: ${result.id}, Name: ${result.name}',
-      );
-      onSuccess?.call('Fotoğraf başarıyla Drive\'a yüklendi!');
-      return true;
-    } catch (e) {
-      print('Drive yükleme hatası: $e');
-
-      // Token süresi dolmuşsa yenile
-      if (e.toString().contains('401') ||
-          e.toString().contains('Invalid Credentials')) {
-        print('Token yenilenmeye çalışılıyor...');
-        final renewed = await _renewToken();
-        if (renewed) {
-          // Tekrar dene
-          return uploadImageToDrive(
-            imageFile,
-            fileName,
-            onSuccess: onSuccess,
-            onError: onError,
-          );
-        }
-      }
-
-      onError?.call('Drive yükleme hatası: $e');
-      return false;
-    }
-  }
-
   // Token yenileme
-  Future<bool> _renewToken() async {
+  Future<bool> renewToken() async {
     try {
       final account = _googleSignIn!.currentUser;
       if (account != null) {
@@ -276,6 +209,7 @@ class GoogleDriveService {
 
   // Getter'lar
   bool get hasPermission => _hasPermission;
+  drive.DriveApi? get driveApi => _driveApi;
 
   Future<bool> get isSignedIn async {
     await _initializeService();

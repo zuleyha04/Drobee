@@ -1,4 +1,4 @@
-import 'package:drobee/presentation/addBottomSheet/widgets/photo_picker_box.dart';
+import 'package:drobee/presentation/addBottomSheet/pages/add_bottom_sheet_page.dart';
 import 'package:flutter/material.dart';
 
 class AddFloatingActionButton extends StatelessWidget {

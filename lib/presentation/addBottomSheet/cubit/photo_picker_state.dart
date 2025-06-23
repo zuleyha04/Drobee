@@ -2,39 +2,40 @@ import 'dart:io';
 
 class PhotoPickerState {
   final File? selectedImage;
+  final List<String> selectedWeathers;
   final bool isLoading;
   final bool isUploading;
-  final List<String> selectedWeathers;
   final String? error;
+  final String? successMessage; // YENİ EKLENEN ALAN
 
-  PhotoPickerState({
-    required this.selectedImage,
-    required this.isLoading,
-    required this.isUploading,
-    required this.selectedWeathers,
+  const PhotoPickerState({
+    this.selectedImage,
+    this.selectedWeathers = const [],
+    this.isLoading = false,
+    this.isUploading = false,
     this.error,
+    this.successMessage, // YENİ EKLENEN ALAN
   });
 
-  factory PhotoPickerState.initial() => PhotoPickerState(
-    selectedImage: null,
-    isLoading: false,
-    isUploading: false,
-    selectedWeathers: [],
-  );
+  factory PhotoPickerState.initial() {
+    return const PhotoPickerState();
+  }
 
   PhotoPickerState copyWith({
     File? selectedImage,
+    List<String>? selectedWeathers,
     bool? isLoading,
     bool? isUploading,
-    List<String>? selectedWeathers,
     String? error,
+    String? successMessage, // YENİ EKLENEN ALAN
   }) {
     return PhotoPickerState(
       selectedImage: selectedImage ?? this.selectedImage,
+      selectedWeathers: selectedWeathers ?? this.selectedWeathers,
       isLoading: isLoading ?? this.isLoading,
       isUploading: isUploading ?? this.isUploading,
-      selectedWeathers: selectedWeathers ?? this.selectedWeathers,
       error: error,
+      successMessage: successMessage, // YENİ EKLENEN ALAN
     );
   }
 }

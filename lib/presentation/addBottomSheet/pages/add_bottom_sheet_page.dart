@@ -1,12 +1,11 @@
-import 'package:drobee/data/services/google_drive_service.dart';
+import 'package:drobee/data/services/drive/drive_service.dart';
+import 'package:drobee/presentation/addBottomSheet/cubit/phote_picker_cubit.dart';
 import 'package:drobee/presentation/addBottomSheet/cubit/photo_picker_state.dart';
 import 'package:drobee/presentation/addBottomSheet/pages/photo_picker_actions.dart';
+import 'package:drobee/presentation/addBottomSheet/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:drobee/core/utils/app_flushbar.dart';
-import 'package:drobee/presentation/addBottomSheet/cubit/photo_picker_cubit.dart';
 import 'package:drobee/presentation/addBottomSheet/widgets/weather_chips.dart';
-import 'package:drobee/common/widget/button/custom_button.dart';
 
 class PhotoPickerBottomSheet extends StatelessWidget {
   const PhotoPickerBottomSheet({super.key});
@@ -47,29 +46,7 @@ class PhotoPickerBottomSheet extends StatelessWidget {
                         const SizedBox(height: 16),
                         const WeatherChips(options: _weatherOptions),
                         const SizedBox(height: 20),
-                        CustomButton(
-                          onTap:
-                              state.isUploading
-                                  ? () {}
-                                  : () => context
-                                      .read<PhotoPickerCubit>()
-                                      .handleSave(
-                                        (fileId) {
-                                          AppFlushbar.showSuccess(
-                                            context,
-                                            'Fotoğraf ve etiketler başarıyla kaydedildi!',
-                                          );
-                                          if (Navigator.canPop(context)) {
-                                            Navigator.pop(context);
-                                          }
-                                        },
-                                        (error) => AppFlushbar.showError(
-                                          context,
-                                          error,
-                                        ),
-                                      ),
-                          text: 'Save',
-                        ),
+                        SaveButton(),
                         SizedBox(
                           height: MediaQuery.of(context).padding.bottom + 20,
                         ),
