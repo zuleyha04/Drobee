@@ -1,15 +1,16 @@
-import 'package:drobee/data/services/drive/drive_service.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:drobee/data/services/database_service.dart';
 import 'package:drobee/presentation/addBottomSheet/cubit/photo_picker_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:drobee/data/services/photo_picker_service.dart';
-import 'package:drobee/data/services/firebase_save_items.dart';
-import 'package:path/path.dart' as path;
 
 class PhotoPickerCubit extends Cubit<PhotoPickerState> {
-  final GoogleDriveService _driveService;
+  final String? currentUserId;
 
-  PhotoPickerCubit(this._driveService) : super(PhotoPickerState.initial());
+  PhotoPickerCubit({this.currentUserId}) : super(PhotoPickerState.initial());
 
   void toggleWeather(String weather) {
     final updated = [...state.selectedWeathers];
@@ -22,57 +23,109 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
   }
 
   Future<void> pickImage(ImageSource source) async {
-    if (state.isLoading) return;
+    if (state.hasAnyLoading) return;
+
     emit(
       state.copyWith(
         isLoading: true,
         selectedImage: null,
+        processedImage: null,
         selectedWeathers: [],
+        uploadedImageUrl: null,
+        error: null,
       ),
     );
 
     try {
-      final image = await PhotoPickerService.pickImageWithBackgroundRemoval(
-        source,
-      );
-      if (image != null) {
-        emit(state.copyWith(selectedImage: image));
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: source);
+
+      if (pickedFile == null) {
+        emit(state.copyWith(isLoading: false));
+        return;
+      }
+
+      final selectedFile = File(pickedFile.path);
+      emit(state.copyWith(selectedImage: selectedFile));
+
+      emit(state.copyWith(isLoading: false, isProcessing: true));
+
+      final processedImage =
+          await PhotoPickerService.pickImageWithBackgroundRemoval(source);
+
+      if (processedImage != null) {
+        emit(
+          state.copyWith(processedImage: processedImage, isProcessing: false),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            processedImage: selectedFile,
+            isProcessing: false,
+            error:
+                'Arka plan silme işlemi başarısız, orijinal resim kullanılacak',
+          ),
+        );
       }
     } catch (e) {
-      emit(state.copyWith(error: 'Hata: $e'));
-    } finally {
-      emit(state.copyWith(isLoading: false));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          isProcessing: false,
+          error: 'Resim seçme hatası: $e',
+        ),
+      );
     }
   }
 
   void removeImage() {
-    emit(state.copyWith(selectedImage: null));
+    emit(
+      state.copyWith(
+        selectedImage: null,
+        processedImage: null,
+        uploadedImageUrl: null,
+      ),
+    );
   }
 
-  Future<String?> uploadToDrive() async {
-    if (state.selectedImage == null || state.isUploading) return null;
+  Future<String?> uploadToFreeImageHost() async {
+    if (state.displayImage == null || state.isUploading) return null;
 
-    emit(state.copyWith(isUploading: true));
+    emit(state.copyWith(isUploading: true, error: null));
 
     try {
-      final hasPermission = await _driveService.checkDrivePermission();
-      if (!hasPermission) {
-        final granted = await _driveService.requestDrivePermission();
-        if (!granted) return null;
+      final bytes = await state.displayImage!.readAsBytes();
+
+      // Byte dizisini base64 formatına çevir
+      final base64Image = base64Encode(bytes);
+
+      final uri = Uri.parse('https://freeimage.host/api/1/upload');
+      final request =
+          http.MultipartRequest('POST', uri)
+            ..fields['key'] = '6d207e02198a847aa98d0a2a901485a5'
+            ..fields['format'] = 'json'
+            ..fields['source'] = base64Image;
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+
+        print('Response body: $responseBody');
+        final decoded = json.decode(responseBody);
+        final imageUrl = decoded['image']?['url'];
+
+        if (imageUrl != null && imageUrl.toString().startsWith('http')) {
+          emit(state.copyWith(uploadedImageUrl: imageUrl));
+          return imageUrl;
+        } else {
+          emit(state.copyWith(error: 'Yüklenen resim linki alınamadı.'));
+          return null;
+        }
+      } else {
+        emit(state.copyWith(error: 'Sunucu hatası: ${response.statusCode}'));
+        return null;
       }
-
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final extension = path.extension(state.selectedImage!.path);
-      final fileName = 'background_removed_$timestamp$extension';
-
-      final String? uploadedFileId =
-          (await _driveService.uploadImageToDrive(
-                state.selectedImage!,
-                fileName,
-              ))
-              as String?;
-
-      return uploadedFileId;
     } catch (e) {
       emit(state.copyWith(error: 'Yükleme hatası: $e'));
       return null;
@@ -80,38 +133,6 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
       emit(state.copyWith(isUploading: false));
     }
   }
-
-  Future<void> handleSave(
-    Function(String) onSuccess,
-    Function(String) onError,
-  ) async {
-    if (state.selectedImage == null) {
-      onError('Lütfen bir fotoğraf seçin.');
-      return;
-    }
-
-    if (!FirebasePhotoService.isUserLoggedIn()) {
-      onError('Lütfen önce giriş yapın.');
-      return;
-    }
-
-    final fileId = await uploadToDrive();
-    if (fileId == null) return;
-
-    final saveSuccess = await FirebasePhotoService.savePhotoToFirebase(
-      imageId: fileId,
-      weatherTags: state.selectedWeathers,
-    );
-
-    if (saveSuccess) {
-      onSuccess(fileId);
-      emit(state.copyWith(selectedImage: null, selectedWeathers: []));
-    } else {
-      onError('Fotoğraf kaydedilirken bir hata oluştu.');
-    }
-  }
-
-  // YENİ EKLENEN FONKSİYONLAR
 
   // Hata ve başarı mesajlarını temizle
   void clearMessages() {
@@ -133,9 +154,9 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
     emit(PhotoPickerState.initial());
   }
 
-  // Save işlemini UI callback'leri ile yönet
+  // Ana kaydetme fonksiyonu
   Future<void> savePhotoWithWeathers() async {
-    if (state.selectedImage == null) {
+    if (state.displayImage == null) {
       setErrorMessage('Lütfen bir fotoğraf seçin');
       return;
     }
@@ -145,46 +166,73 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
       return;
     }
 
-    if (!FirebasePhotoService.isUserLoggedIn()) {
-      setErrorMessage('Lütfen önce giriş yapın');
+    if (currentUserId == null) {
+      setErrorMessage('Kullanıcı girişi gerekli');
       return;
     }
 
-    // Loading durumunu set et
-    emit(state.copyWith(isUploading: true, error: null));
-
     try {
-      final fileId = await uploadToDrive();
+      // FreeImage.host'a yükle
+      final imageUrl = await uploadToFreeImageHost();
 
-      if (fileId == null) {
-        setErrorMessage('Drive yükleme başarısız');
-        return;
-      }
-
-      final saveSuccess = await FirebasePhotoService.savePhotoToFirebase(
-        imageId: fileId,
-        weatherTags: state.selectedWeathers,
-      );
-
-      if (saveSuccess) {
-        setSuccessMessage(
-          'Fotoğraf ve hava durumu bilgileri başarıyla kaydedildi!',
+      if (imageUrl != null) {
+        // Veritabanına kaydet
+        await DatabaseService.saveUserPhoto(
+          userId: currentUserId!,
+          imageUrl: imageUrl,
+          weatherTags: state.selectedWeathers,
         );
+
+        setSuccessMessage('Fotoğraf başarıyla yüklendi ve kaydedildi!');
+
         // Seçimleri temizle
         emit(
           state.copyWith(
             selectedImage: null,
+            processedImage: null,
             selectedWeathers: [],
-            isUploading: false,
+            uploadedImageUrl: null,
           ),
         );
       } else {
-        setErrorMessage('Firebase kaydetme hatası oluştu');
+        setErrorMessage('Resim yükleme başarısız');
       }
     } catch (e) {
-      setErrorMessage('Beklenmeyen hata: $e');
-    } finally {
-      emit(state.copyWith(isUploading: false));
+      setErrorMessage('Kaydetme hatası: $e');
+    }
+  }
+
+  Future<void> handleSave(
+    Function(String) onSuccess,
+    Function(String) onError,
+  ) async {
+    if (state.displayImage == null) {
+      onError('Lütfen bir fotoğraf seçin.');
+      return;
+    }
+
+    if (state.selectedWeathers.isEmpty) {
+      onError('Lütfen en az bir hava durumu seçin.');
+      return;
+    }
+
+    try {
+      final imageUrl = await uploadToFreeImageHost();
+
+      if (imageUrl != null) {
+        onSuccess(imageUrl);
+        emit(
+          state.copyWith(
+            selectedImage: null,
+            processedImage: null,
+            selectedWeathers: [],
+          ),
+        );
+      } else {
+        onError('Resim yükleme başarısız oldu.');
+      }
+    } catch (e) {
+      onError('Beklenmeyen hata: $e');
     }
   }
 }

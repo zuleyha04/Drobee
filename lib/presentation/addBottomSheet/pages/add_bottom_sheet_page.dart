@@ -1,4 +1,3 @@
-import 'package:drobee/data/services/drive/drive_service.dart';
 import 'package:drobee/presentation/addBottomSheet/cubit/phote_picker_cubit.dart';
 import 'package:drobee/presentation/addBottomSheet/cubit/photo_picker_state.dart';
 import 'package:drobee/presentation/addBottomSheet/pages/photo_picker_actions.dart';
@@ -20,7 +19,7 @@ class PhotoPickerBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PhotoPickerCubit(GoogleDriveService()),
+      create: (context) => PhotoPickerCubit(),
       child: BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
         builder: (context, state) {
           return Container(
@@ -38,19 +37,24 @@ class PhotoPickerBottomSheet extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        _buildPhotoArea(state, context),
-                        const SizedBox(height: 16),
-                        const PhotoPickerActions(),
-                        const SizedBox(height: 16),
-                        const WeatherChips(options: _weatherOptions),
-                        const SizedBox(height: 20),
-                        SaveButton(),
-                        SizedBox(
-                          height: MediaQuery.of(context).padding.bottom + 20,
-                        ),
-                      ],
+                    child: BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
+                      builder: (context, state) {
+                        return Column(
+                          children: [
+                            _buildPhotoArea(state, context),
+                            const SizedBox(height: 16),
+                            const PhotoPickerActions(),
+                            const SizedBox(height: 16),
+                            const WeatherChips(options: _weatherOptions),
+                            const SizedBox(height: 20),
+                            const SaveButton(),
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).padding.bottom + 20,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -97,29 +101,43 @@ class PhotoPickerBottomSheet extends StatelessWidget {
   }
 
   Widget _buildPhotoContent(PhotoPickerState state, BuildContext context) {
+    // Loading durumları
     if (state.isLoading) {
       return const Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           CircularProgressIndicator(),
           SizedBox(height: 16),
-          Text('Loading...'),
+          Text('Resim seçiliyor...'),
         ],
       );
     }
 
-    if (state.selectedImage != null) {
+    if (state.isProcessing) {
+      return const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text('Arka plan siliniyor...'),
+        ],
+      );
+    }
+
+    // Resim gösterimi (processedImage öncelikli, sonra selectedImage)
+    if (state.displayImage != null) {
       return Stack(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.file(
-              state.selectedImage!,
+              state.displayImage!,
               width: double.infinity,
               height: double.infinity,
               fit: BoxFit.cover,
             ),
           ),
+          // Sil butonu
           Positioned(
             top: 8,
             right: 8,
@@ -135,10 +153,32 @@ class PhotoPickerBottomSheet extends StatelessWidget {
               ),
             ),
           ),
+          // Processed image olduğunu göster
+          if (state.processedImage != null)
+            Positioned(
+              bottom: 8,
+              left: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  'Arka plan silindi ✓',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
         ],
       );
     }
 
+    // Boş durum
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

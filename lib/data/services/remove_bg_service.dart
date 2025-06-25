@@ -27,7 +27,6 @@ class RemoveBgService {
       var response = await request.send();
 
       if (response.statusCode == 200) {
-        // Başarılı yanıt
         Uint8List imageBytes = await response.stream.toBytes();
 
         // Geçici dosya oluştur
