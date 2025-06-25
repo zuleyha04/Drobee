@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:drobee/data/services/database_service.dart';
+import 'package:drobee/data/services/firestore_database_service.dart';
 import 'package:drobee/presentation/addBottomSheet/cubit/photo_picker_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -156,6 +157,8 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
 
   // Ana kaydetme fonksiyonu
   Future<void> savePhotoWithWeathers() async {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     if (state.displayImage == null) {
       setErrorMessage('Lütfen bir fotoğraf seçin');
       return;
@@ -176,16 +179,14 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
       final imageUrl = await uploadToFreeImageHost();
 
       if (imageUrl != null) {
-        // Veritabanına kaydet
-        await DatabaseService.saveUserPhoto(
-          userId: currentUserId!,
+        await FirestoreService.saveUserPhoto(
+          userId: currentUserId,
           imageUrl: imageUrl,
           weatherTags: state.selectedWeathers,
         );
 
         setSuccessMessage('Fotoğraf başarıyla yüklendi ve kaydedildi!');
 
-        // Seçimleri temizle
         emit(
           state.copyWith(
             selectedImage: null,

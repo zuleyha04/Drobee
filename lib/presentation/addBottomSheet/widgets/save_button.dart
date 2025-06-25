@@ -15,11 +15,15 @@ class SaveButton extends StatelessWidget {
       listener: (context, state) {
         // Başarı mesajını dinle
         if (state.successMessage != null) {
-          Future.delayed(const Duration(milliseconds: 100), () {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            if (!context.mounted) return;
+
             AppFlushbar.showSuccess(context, state.successMessage!);
-            // Mesajı temizle
             context.read<PhotoPickerCubit>().clearMessages();
-            // Bottom sheet'i kapat
+
+            await Future.delayed(Duration(milliseconds: 300));
+
+            if (!context.mounted) return;
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             }

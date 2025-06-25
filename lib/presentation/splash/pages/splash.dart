@@ -1,5 +1,6 @@
 import 'package:drobee/common/navigator/app_navigator.dart';
 import 'package:drobee/core/configs/theme/app_colors.dart';
+import 'package:drobee/presentation/home/pages/home_page.dart';
 import 'package:drobee/presentation/onboarding/pages/onboarding_page.dart';
 import 'package:drobee/presentation/splash/cubit/splash_cubit.dart';
 import 'package:drobee/presentation/splash/cubit/splash_state.dart';
@@ -19,9 +20,9 @@ class SplashPage extends StatelessWidget {
           AppNavigator.pushReplacement(context, OnBoardingPage());
         }
         // FIXME: Authenticated state
-        // else {
-        //   AppNavigator.pushReplacement(context, HomePage());
-        // }
+        else {
+          AppNavigator.pushReplacement(context, HomePage());
+        }
       },
       child: Scaffold(
         body: Container(
