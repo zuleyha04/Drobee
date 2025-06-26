@@ -29,7 +29,11 @@ class PhotoPickerState {
 
   PhotoPickerState copyWith({
     File? selectedImage,
+    bool removeSelectedImage = false,
+
     File? processedImage,
+    bool removeProcessedImage = false,
+
     List<String>? selectedWeathers,
     bool? isLoading,
     bool? isUploading,
@@ -37,17 +41,23 @@ class PhotoPickerState {
     String? error,
     String? successMessage,
     String? uploadedImageUrl,
+    bool removeUploadedImageUrl = false,
   }) {
     return PhotoPickerState(
-      selectedImage: selectedImage ?? this.selectedImage,
-      processedImage: processedImage ?? this.processedImage,
+      selectedImage:
+          removeSelectedImage ? null : selectedImage ?? this.selectedImage,
+      processedImage:
+          removeProcessedImage ? null : processedImage ?? this.processedImage,
       selectedWeathers: selectedWeathers ?? this.selectedWeathers,
       isLoading: isLoading ?? this.isLoading,
       isUploading: isUploading ?? this.isUploading,
       isProcessing: isProcessing ?? this.isProcessing,
       error: error,
       successMessage: successMessage,
-      uploadedImageUrl: uploadedImageUrl ?? this.uploadedImageUrl,
+      uploadedImageUrl:
+          removeUploadedImageUrl
+              ? null
+              : uploadedImageUrl ?? this.uploadedImageUrl,
     );
   }
 

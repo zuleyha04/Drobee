@@ -8,7 +8,7 @@ class AppFlushbar {
       backgroundColor: Colors.green,
       margin: const EdgeInsets.all(12),
       borderRadius: BorderRadius.circular(12),
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
       flushbarPosition: FlushbarPosition.TOP,
       animationDuration: const Duration(milliseconds: 500),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),

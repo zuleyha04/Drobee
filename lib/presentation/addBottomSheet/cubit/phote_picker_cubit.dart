@@ -82,9 +82,10 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
   void removeImage() {
     emit(
       state.copyWith(
-        selectedImage: null,
-        processedImage: null,
-        uploadedImageUrl: null,
+        removeSelectedImage: true,
+        removeProcessedImage: true,
+        removeUploadedImageUrl: true,
+        selectedWeathers: [],
       ),
     );
   }

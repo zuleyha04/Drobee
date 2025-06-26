@@ -14,13 +14,12 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.microtask(() => context.read<SplashCubit>().appStarted());
     return BlocListener<SplashCubit, SplashState>(
       listener: (context, state) {
         if (state is UnAuthenticated) {
           AppNavigator.pushReplacement(context, OnBoardingPage());
-        }
-        // FIXME: Authenticated state
-        else {
+        } else {
           AppNavigator.pushReplacement(context, HomePage());
         }
       },

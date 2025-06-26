@@ -21,7 +21,7 @@ class SaveButton extends StatelessWidget {
             AppFlushbar.showSuccess(context, state.successMessage!);
             context.read<PhotoPickerCubit>().clearMessages();
 
-            await Future.delayed(Duration(milliseconds: 300));
+            await Future.delayed(Duration(seconds: 3));
 
             if (!context.mounted) return;
             if (Navigator.canPop(context)) {
@@ -34,7 +34,6 @@ class SaveButton extends StatelessWidget {
         if (state.error != null) {
           Future.delayed(Duration.zero, () {
             AppFlushbar.showError(context, state.error!);
-            // Mesajı temizle
             context.read<PhotoPickerCubit>().clearMessages();
           });
         }
@@ -43,7 +42,7 @@ class SaveButton extends StatelessWidget {
         builder: (context, state) {
           return Column(
             children: [
-              // İşleniyor durumu (metinle)
+              // İşleniyor durumu
               if (state.isProcessing)
                 Container(
                   width: double.infinity,
@@ -115,7 +114,7 @@ class SaveButton extends StatelessWidget {
                   ),
                 ),
 
-              // Yükleniyor durumu (metinle)
+              // Yükleniyor durumu
               if (state.isUploading)
                 Container(
                   width: double.infinity,
@@ -141,17 +140,11 @@ class SaveButton extends StatelessWidget {
                     state.hasAnyLoading
                         ? () {}
                         : () {
-                          // savePhotoWithWeathers fonksiyonunu çağır
                           context
                               .read<PhotoPickerCubit>()
                               .savePhotoWithWeathers();
                         },
-                text:
-                    state.isUploading
-                        ? 'Kaydediliyor...'
-                        : state.isProcessing
-                        ? 'İşleniyor...'
-                        : 'Save',
+                text: 'Save',
               ),
             ],
           );

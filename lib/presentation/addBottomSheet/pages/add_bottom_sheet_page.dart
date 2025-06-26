@@ -19,9 +19,12 @@ class PhotoPickerBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PhotoPickerCubit(),
+      create: (_) => PhotoPickerCubit(),
       child: BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
         builder: (context, state) {
+          // Debug print: BlocBuilder rebuild kontrolü
+          print('BlocBuilder rebuild, displayImage: ${state.displayImage}');
+
           return Container(
             height: MediaQuery.of(context).size.height * 0.85,
             decoration: const BoxDecoration(
@@ -37,24 +40,19 @@ class PhotoPickerBottomSheet extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
-                      builder: (context, state) {
-                        return Column(
-                          children: [
-                            _buildPhotoArea(state, context),
-                            const SizedBox(height: 16),
-                            const PhotoPickerActions(),
-                            const SizedBox(height: 16),
-                            const WeatherChips(options: _weatherOptions),
-                            const SizedBox(height: 20),
-                            const SaveButton(),
-                            SizedBox(
-                              height:
-                                  MediaQuery.of(context).padding.bottom + 20,
-                            ),
-                          ],
-                        );
-                      },
+                    child: Column(
+                      children: [
+                        _buildPhotoArea(state, context),
+                        const SizedBox(height: 16),
+                        const PhotoPickerActions(),
+                        const SizedBox(height: 16),
+                        const WeatherChips(options: _weatherOptions),
+                        const SizedBox(height: 20),
+                        const SaveButton(),
+                        SizedBox(
+                          height: MediaQuery.of(context).padding.bottom + 20,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -142,7 +140,10 @@ class PhotoPickerBottomSheet extends StatelessWidget {
             top: 8,
             right: 8,
             child: GestureDetector(
-              onTap: () => context.read<PhotoPickerCubit>().removeImage(),
+              onTap: () {
+                print("Remove tapped");
+                context.read<PhotoPickerCubit>().removeImage();
+              },
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: const BoxDecoration(
@@ -153,27 +154,6 @@ class PhotoPickerBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          // Processed image olduğunu göster
-          if (state.processedImage != null)
-            Positioned(
-              bottom: 8,
-              left: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'Arka plan silindi ✓',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
         ],
       );
     }
