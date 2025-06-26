@@ -15,32 +15,18 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
 
   void toggleWeather(String weather) {
     final updated = [...state.selectedWeathers];
-    if (updated.contains(weather)) {
-      updated.remove(weather);
-    } else {
-      updated.add(weather);
-    }
+    updated.contains(weather) ? updated.remove(weather) : updated.add(weather);
     emit(state.copyWith(selectedWeathers: updated));
   }
 
   Future<void> pickImage(ImageSource source) async {
     if (state.hasAnyLoading) return;
 
-    emit(
-      state.copyWith(
-        isLoading: true,
-        selectedImage: null,
-        processedImage: null,
-        selectedWeathers: [],
-        uploadedImageUrl: null,
-        error: null,
-      ),
-    );
+    _resetStateBeforePickingImage();
 
     try {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: source);
-
       if (pickedFile == null) {
         emit(state.copyWith(isLoading: false));
         return;
@@ -50,32 +36,10 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
       emit(state.copyWith(selectedImage: selectedFile));
 
       emit(state.copyWith(isLoading: false, isProcessing: true));
-
-      final processedImage =
-          await PhotoPickerService.pickImageWithBackgroundRemoval(source);
-
-      if (processedImage != null) {
-        emit(
-          state.copyWith(processedImage: processedImage, isProcessing: false),
-        );
-      } else {
-        emit(
-          state.copyWith(
-            processedImage: selectedFile,
-            isProcessing: false,
-            error:
-                'Arka plan silme işlemi başarısız, orijinal resim kullanılacak',
-          ),
-        );
-      }
+      await _processPickedImage(selectedFile);
     } catch (e) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          isProcessing: false,
-          error: 'Resim seçme hatası: $e',
-        ),
-      );
+      _showError('Resim seçme hatası: $e');
+      emit(state.copyWith(isLoading: false, isProcessing: false));
     }
   }
 
@@ -97,97 +61,66 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
 
     try {
       final bytes = await state.displayImage!.readAsBytes();
-
-      // Byte dizisini base64 formatına çevir
       final base64Image = base64Encode(bytes);
 
-      final uri = Uri.parse('https://freeimage.host/api/1/upload');
       final request =
-          http.MultipartRequest('POST', uri)
+          http.MultipartRequest(
+              'POST',
+              Uri.parse('https://freeimage.host/api/1/upload'),
+            )
             ..fields['key'] = '6d207e02198a847aa98d0a2a901485a5'
             ..fields['format'] = 'json'
             ..fields['source'] = base64Image;
 
       final response = await request.send();
+      final body = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-
-        print('Response body: $responseBody');
-        final decoded = json.decode(responseBody);
+        final decoded = json.decode(body);
         final imageUrl = decoded['image']?['url'];
-
         if (imageUrl != null && imageUrl.toString().startsWith('http')) {
           emit(state.copyWith(uploadedImageUrl: imageUrl));
           return imageUrl;
-        } else {
-          emit(state.copyWith(error: 'Yüklenen resim linki alınamadı.'));
-          return null;
         }
+        _showError('Yüklenen resim linki alınamadı.');
       } else {
-        emit(state.copyWith(error: 'Sunucu hatası: ${response.statusCode}'));
-        return null;
+        _showError('Sunucu hatası: ${response.statusCode}');
       }
     } catch (e) {
-      emit(state.copyWith(error: 'Yükleme hatası: $e'));
-      return null;
+      _showError('Yükleme hatası: $e');
     } finally {
       emit(state.copyWith(isUploading: false));
     }
+
+    return null;
   }
 
-  // Hata ve başarı mesajlarını temizle
-  void clearMessages() {
-    emit(state.copyWith(error: null, successMessage: null));
-  }
+  void clearMessages() =>
+      emit(state.copyWith(error: null, successMessage: null));
+  void setSuccessMessage(String msg) =>
+      emit(state.copyWith(successMessage: msg));
+  void setErrorMessage(String msg) => emit(state.copyWith(error: msg));
+  void reset() => emit(PhotoPickerState.initial());
 
-  // Başarı mesajı set et
-  void setSuccessMessage(String message) {
-    emit(state.copyWith(successMessage: message));
-  }
-
-  // Hata mesajı set et
-  void setErrorMessage(String message) {
-    emit(state.copyWith(error: message));
-  }
-
-  // Tüm seçimleri sıfırla
-  void reset() {
-    emit(PhotoPickerState.initial());
-  }
-
-  // Ana kaydetme fonksiyonu
   Future<void> savePhotoWithWeathers() async {
-    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-
+    final uid = FirebaseAuth.instance.currentUser?.uid;
     if (state.displayImage == null) {
-      setErrorMessage('Lütfen bir fotoğraf seçin');
-      return;
+      return setErrorMessage('Lütfen bir fotoğraf seçin');
     }
-
     if (state.selectedWeathers.isEmpty) {
-      setErrorMessage('Lütfen en az bir hava durumu seçin');
-      return;
-    }
-
-    if (currentUserId == null) {
-      setErrorMessage('Kullanıcı girişi gerekli');
-      return;
+      return setErrorMessage('Lütfen en az bir hava durumu seçin');
     }
 
     try {
-      // FreeImage.host'a yükle
       final imageUrl = await uploadToFreeImageHost();
-
       if (imageUrl != null) {
         await FirestoreService.saveUserPhoto(
-          userId: currentUserId,
+          userId: uid!,
           imageUrl: imageUrl,
           weatherTags: state.selectedWeathers,
         );
 
         setSuccessMessage('Fotoğraf başarıyla yüklendi ve kaydedildi!');
-
         emit(
           state.copyWith(
             selectedImage: null,
@@ -209,18 +142,14 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
     Function(String) onError,
   ) async {
     if (state.displayImage == null) {
-      onError('Lütfen bir fotoğraf seçin.');
-      return;
+      return onError('Lütfen bir fotoğraf seçin.');
     }
-
     if (state.selectedWeathers.isEmpty) {
-      onError('Lütfen en az bir hava durumu seçin.');
-      return;
+      return onError('Lütfen en az bir hava durumu seçin.');
     }
 
     try {
       final imageUrl = await uploadToFreeImageHost();
-
       if (imageUrl != null) {
         onSuccess(imageUrl);
         emit(
@@ -237,4 +166,35 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
       onError('Beklenmeyen hata: $e');
     }
   }
+
+  void _resetStateBeforePickingImage() {
+    emit(
+      state.copyWith(
+        isLoading: true,
+        selectedImage: null,
+        processedImage: null,
+        selectedWeathers: [],
+        uploadedImageUrl: null,
+        error: null,
+      ),
+    );
+  }
+
+  Future<void> _processPickedImage(File image) async {
+    final processed = await PhotoPickerService.removeBackgroundFromFile(image);
+    if (processed != null) {
+      emit(state.copyWith(processedImage: processed, isProcessing: false));
+    } else {
+      emit(
+        state.copyWith(
+          processedImage: image,
+          isProcessing: false,
+          error:
+              'Arka plan silme işlemi başarısız, orijinal resim kullanılacak',
+        ),
+      );
+    }
+  }
+
+  void _showError(String msg) => emit(state.copyWith(error: msg));
 }

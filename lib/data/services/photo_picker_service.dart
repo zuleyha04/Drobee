@@ -5,32 +5,22 @@ import 'remove_bg_service.dart';
 class PhotoPickerService {
   static Future<File?> pickImage(ImageSource source) async {
     try {
-      final ImagePicker picker = ImagePicker();
+      final picker = ImagePicker();
       final pickedFile = await picker.pickImage(
         source: source,
         maxWidth: 1920,
         maxHeight: 1920,
         imageQuality: 85,
       );
-
       return pickedFile != null ? File(pickedFile.path) : null;
     } catch (e) {
       throw Exception('Fotoğraf seçilemedi: $e');
     }
   }
 
-  static Future<File?> pickImageWithBackgroundRemoval(
-    ImageSource source,
-  ) async {
+  static Future<File?> removeBackgroundFromFile(File originalImage) async {
     try {
-      final File? originalImage = await pickImage(source);
-      if (originalImage == null) return null;
-
-      final File? processedImage = await RemoveBgService.removeBackground(
-        originalImage,
-      );
-
-      return processedImage;
+      return await RemoveBgService.removeBackground(originalImage);
     } catch (e) {
       throw Exception('Fotoğraf işleme hatası: $e');
     }
