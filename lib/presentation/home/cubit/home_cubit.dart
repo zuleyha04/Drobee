@@ -40,7 +40,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  // Firebase'den kullanıcı resimlerini getir
+  // Firebase'den kullanıcı resimlerini getirir
   Stream<List<UserImageModel>> _getUserImagesStream(String userId) {
     return FirebaseFirestore.instance
         .collection('user_photos')
@@ -71,6 +71,13 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e.toString()));
     }
+  }
+
+  Future<void> deleteImage(String imageId) async {
+    await FirebaseFirestore.instance
+        .collection('user_photos')
+        .doc(imageId)
+        .delete();
   }
 
   @override
