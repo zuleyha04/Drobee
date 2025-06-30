@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:drobee/common/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
 
 class FreeImageHostService {
-  static const String _apiKey = '6d207e02198a847aa98d0a2a901485a5';
-  static const String _baseUrl = 'https://freeimage.host/api/1/upload';
-
   static Future<String?> uploadImage(File imageFile) async {
     try {
       // Dosyayı base64'e çevir
@@ -13,12 +11,12 @@ class FreeImageHostService {
       String base64Image = base64Encode(imageBytes);
 
       // API isteği hazırla
-      var request = http.MultipartRequest('POST', Uri.parse(_baseUrl));
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(ApiConstants.imageHostBaseUrl),
+      );
+      request.fields['key'] = ApiConstants.imageHostApiKey;
 
-      // API key ekle
-      request.fields['key'] = _apiKey;
-
-      // Resmi ekle
       request.fields['source'] = base64Image;
       request.fields['format'] = 'json';
 
@@ -29,7 +27,6 @@ class FreeImageHostService {
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);
 
-        // Başarılı yanıt kontrolü
         if (jsonResponse['status_code'] == 200) {
           return jsonResponse['image']['url'];
         } else {

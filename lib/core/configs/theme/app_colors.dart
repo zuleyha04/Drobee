@@ -21,7 +21,7 @@ class AppColors {
 
   // Gradient tanımı
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [secondary, primary],
+    colors: [Color(0xFFE91E63), Color(0xFF5F3CBF)],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );
