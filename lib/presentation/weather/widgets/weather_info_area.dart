@@ -1,5 +1,9 @@
+import 'package:drobee/presentation/home/widgets/image_card.dart';
+import 'package:drobee/presentation/home/cubit/home_cubit.dart';
+import 'package:drobee/presentation/home/cubit/home_state.dart';
 import 'package:drobee/presentation/weather/cubit/weather_cubit.dart';
 import 'package:drobee/presentation/weather/cubit/weather_state.dart';
+import 'package:drobee/presentation/weather/utils/weather_utils.dart';
 import 'package:drobee/presentation/weather/widgets/weather_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +16,8 @@ class WeatherInfoArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WeatherCubit, WeatherState>(
-      builder: (context, state) {
-        if (state is WeatherInitial) {
+      builder: (context, weatherState) {
+        if (weatherState is WeatherInitial) {
           return const Center(
             child: Text(
               'Şehir adını girin ve hava durumunu öğrenin',
@@ -21,14 +25,9 @@ class WeatherInfoArea extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           );
-        } else if (state is WeatherLoading) {
+        } else if (weatherState is WeatherLoading) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state is WeatherLoaded) {
-          return Align(
-            alignment: Alignment.topCenter,
-            child: WeatherInfoCard(weather: state.weather),
-          );
-        } else if (state is WeatherError) {
+        } else if (weatherState is WeatherError) {
           return SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -36,7 +35,7 @@ class WeatherInfoArea extends StatelessWidget {
                 const Icon(Icons.error, size: 48, color: Colors.red),
                 const SizedBox(height: 16),
                 Text(
-                  state.message,
+                  weatherState.message,
                   style: const TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
@@ -53,7 +52,77 @@ class WeatherInfoArea extends StatelessWidget {
               ],
             ),
           );
+        } else if (weatherState is WeatherLoaded) {
+          final rawDescription = weatherState.weather.description;
+          final weatherTag = mapDescriptionToTag(rawDescription);
+
+          // LOG: terminal çıktısı
+          print('API Description: $rawDescription');
+          print('Mapped weather tag: $weatherTag');
+
+          return BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, homeState) {
+              final allImages = homeState.userImages;
+
+              // LOG: gelen tüm resimler
+              print('Toplam resim sayısı: ${allImages.length}');
+
+              final filteredImages =
+                  allImages.where((img) {
+                    final match = img.weatherTags.contains(weatherTag);
+                    print(
+                      'Resim etiketi: ${img.weatherTags} → eşleşme: $match',
+                    );
+                    return match;
+                  }).toList();
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: WeatherInfoCard(weather: weatherState.weather),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      "Bu hava durumuna uygun kombinler: ($weatherTag)",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child:
+                        filteredImages.isEmpty
+                            ? const Center(
+                              child: Text(
+                                "Bu hava durumuna uygun kombin bulunamadı.",
+                              ),
+                            )
+                            : GridView.builder(
+                              padding: const EdgeInsets.all(8),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                  ),
+                              itemCount: filteredImages.length,
+                              itemBuilder: (context, index) {
+                                return ImageCard(image: filteredImages[index]);
+                              },
+                            ),
+                  ),
+                ],
+              );
+            },
+          );
         }
+
         return const SizedBox.shrink();
       },
     );

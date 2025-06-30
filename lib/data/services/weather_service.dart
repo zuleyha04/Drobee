@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class WeatherService {
   Future<WeatherModel> getCurrentWeather(String cityName) async {
     final url =
-        '${ApiConstants.weatherBaseUrl}/weather?q=$cityName&appid=${ApiConstants.weatherApiKey}&units=metric&lang=tr';
+        '${ApiConstants.weatherBaseUrl}/weather?q=$cityName&appid=${ApiConstants.weatherApiKey}&units=metric&lang=en';
 
     try {
       final response = await http.get(Uri.parse(url));

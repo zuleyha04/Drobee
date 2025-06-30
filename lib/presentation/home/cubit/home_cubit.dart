@@ -40,7 +40,6 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  // Firebase'den kullanıcı resimlerini getirir
   Stream<List<UserImageModel>> _getUserImagesStream(String userId) {
     return FirebaseFirestore.instance
         .collection('user_photos')
@@ -58,7 +57,6 @@ class HomeCubit extends Cubit<HomeState> {
                   createdAt: data['created_at'] as Timestamp?,
                 );
               }).toList();
-
           return docs;
         });
   }
