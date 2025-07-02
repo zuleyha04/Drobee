@@ -56,24 +56,13 @@ class WeatherInfoArea extends StatelessWidget {
           final rawDescription = weatherState.weather.description;
           final weatherTag = mapDescriptionToTag(rawDescription);
 
-          // LOG: terminal çıktısı
-          print('API Description: $rawDescription');
-          print('Mapped weather tag: $weatherTag');
-
           return BlocBuilder<HomeCubit, HomeState>(
             builder: (context, homeState) {
               final allImages = homeState.userImages;
 
-              // LOG: gelen tüm resimler
-              print('Toplam resim sayısı: ${allImages.length}');
-
               final filteredImages =
                   allImages.where((img) {
-                    final match = img.weatherTags.contains(weatherTag);
-                    print(
-                      'Resim etiketi: ${img.weatherTags} → eşleşme: $match',
-                    );
-                    return match;
+                    return img.weatherTags.contains(weatherTag);
                   }).toList();
 
               return Column(
@@ -87,7 +76,7 @@ class WeatherInfoArea extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      "Bu hava durumuna uygun kombinler: ($weatherTag)",
+                      "Bu hava durumuna uygun parçalar: ($weatherTag)",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -100,7 +89,7 @@ class WeatherInfoArea extends StatelessWidget {
                         filteredImages.isEmpty
                             ? const Center(
                               child: Text(
-                                "Bu hava durumuna uygun kombin bulunamadı.",
+                                "Bu hava durumuna uygun parça bulunamadı.",
                               ),
                             )
                             : GridView.builder(
@@ -113,7 +102,10 @@ class WeatherInfoArea extends StatelessWidget {
                                   ),
                               itemCount: filteredImages.length,
                               itemBuilder: (context, index) {
-                                return ImageCard(image: filteredImages[index]);
+                                return ImageCard(
+                                  image: filteredImages[index],
+                                  showDeleteButton: false,
+                                );
                               },
                             ),
                   ),
@@ -122,7 +114,6 @@ class WeatherInfoArea extends StatelessWidget {
             },
           );
         }
-
         return const SizedBox.shrink();
       },
     );

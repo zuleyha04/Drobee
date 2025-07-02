@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drobee/presentation/home/models/user_image_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -54,5 +55,12 @@ class FirestoreService {
 
   Future<void> deleteUserImage(String imageId) async {
     await _firestore.collection('user_images').doc(imageId).delete();
+  }
+
+  static Future<void> deleteCurrentUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.delete();
+    }
   }
 }

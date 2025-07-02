@@ -1,3 +1,4 @@
+import 'package:drobee/common/widget/pageTitle/page_title.dart';
 import 'package:flutter/material.dart';
 
 class StylePage extends StatelessWidget {
@@ -10,10 +11,7 @@ class StylePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Style",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
+          const PageTitle('Style'),
           SizedBox(height: 20),
           Text(
             "Bu style sayfasıdır. Burada stil önerilerinizi görebilirsiniz.",

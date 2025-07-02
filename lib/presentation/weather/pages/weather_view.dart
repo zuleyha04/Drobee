@@ -1,3 +1,4 @@
+import 'package:drobee/common/widget/pageTitle/page_title.dart';
 import 'package:drobee/presentation/weather/cubit/weather_cubit.dart';
 import 'package:drobee/presentation/weather/widgets/city_search_card.dart';
 import 'package:drobee/presentation/weather/widgets/weather_info_area.dart';
@@ -27,12 +28,12 @@ class _WeatherViewState extends State<WeatherView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Weather'), elevation: 0),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              const PageTitle('Weather'),
               CitySearchCard(cityController: _cityController),
               const SizedBox(height: 10),
               Expanded(child: WeatherInfoArea(cityController: _cityController)),

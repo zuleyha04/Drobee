@@ -5,8 +5,13 @@ import 'package:drobee/presentation/home/cubit/home_cubit.dart';
 
 class ImageCard extends StatelessWidget {
   final UserImageModel image;
+  final bool showDeleteButton;
 
-  const ImageCard({super.key, required this.image});
+  const ImageCard({
+    super.key,
+    required this.image,
+    this.showDeleteButton = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +43,21 @@ class ImageCard extends StatelessWidget {
                 },
               ),
             ),
-            Positioned(
-              top: 8,
-              right: 8,
-              child: GestureDetector(
-                onTap: () {
-                  context.read<HomeCubit>().deleteImage(image.id);
-                },
-                child: const CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  radius: 16,
-                  child: Icon(Icons.close, size: 18, color: Colors.white),
+            if (showDeleteButton)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: GestureDetector(
+                  onTap: () {
+                    context.read<HomeCubit>().deleteImage(image.id);
+                  },
+                  child: const CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    radius: 16,
+                    child: Icon(Icons.close, size: 18, color: Colors.white),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
