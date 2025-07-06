@@ -5,20 +5,36 @@ class EmptyImagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            'Henüz resim eklemediniz',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(
+              Icons.photo_library_outlined,
+              size: 40,
+              color: Colors.grey,
+            ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 24),
           Text(
-            'Yeni resim eklemek için + butonuna basın',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
+            'No Images Found',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Tap + to add new images',
+            style: TextStyle(fontSize: 16, color: Colors.grey[500]),
           ),
         ],
       ),

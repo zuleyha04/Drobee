@@ -1,6 +1,6 @@
 import 'package:drobee/common/constants/navigation_constants.dart';
 import 'package:drobee/presentation/settingPage/pages/setting_page.dart';
-import 'package:drobee/presentation/stylePage/style_page.dart';
+import 'package:drobee/presentation/stylePage/pages/style_page.dart';
 import 'package:drobee/presentation/weather/pages/weather_page.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_bar.dart';
