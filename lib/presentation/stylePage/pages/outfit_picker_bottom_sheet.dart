@@ -1,5 +1,6 @@
 import 'package:drobee/common/widget/button/custom_button.dart';
-import 'package:drobee/presentation/stylePage/pages/image_selection.dart';
+import 'package:drobee/presentation/stylePage/models/outfit_data_model.dart';
+import 'package:drobee/presentation/stylePage/pages/clothes_selection.dart';
 import 'package:flutter/material.dart';
 
 class OutfitPickerBottomSheet extends StatefulWidget {
@@ -99,22 +100,38 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
                                   left: imageItem.position.dx,
                                   top: imageItem.position.dy,
                                   child: GestureDetector(
-                                    onPanUpdate: (details) {
+                                    onScaleStart: (details) {
+                                      // Scale/Pan başlangıcı
+                                    },
+                                    onScaleUpdate: (details) {
                                       setState(() {
+                                        // Eğer scale 1.0'dan farklıysa scale/rotation işlemi
+                                        if (details.scale != 1.0) {
+                                          // Scale değişimini yavaşlat
+                                          final scaleChange =
+                                              (details.scale - 1.0) *
+                                              0.3; // 0.3 faktörü ile yavaşlat
+                                          imageItem.scale = (imageItem.scale +
+                                                  scaleChange)
+                                              .clamp(0.5, 3.0);
+                                          imageItem.rotation = details.rotation;
+                                        }
+
+                                        // Pan (sürükleme) işlemi
                                         final newPosition = Offset(
                                           imageItem.position.dx +
-                                              details.delta.dx,
+                                              details.focalPointDelta.dx,
                                           imageItem.position.dy +
-                                              details.delta.dy,
+                                              details.focalPointDelta.dy,
                                         );
 
                                         // Sınırları kontrol et
                                         final maxWidth =
                                             MediaQuery.of(context).size.width -
-                                            140; // padding ve image width
+                                            140;
                                         final maxHeight =
                                             MediaQuery.of(context).size.height *
-                                            0.4; // container height
+                                            0.4;
 
                                         imageItem.position = Offset(
                                           newPosition.dx.clamp(0, maxWidth),
@@ -123,32 +140,17 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
                                       });
                                     },
                                     child: Container(
-                                      width: 100,
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.2,
-                                            ),
-                                            blurRadius: 4,
-                                            offset: const Offset(2, 2),
-                                          ),
-                                        ],
-                                      ),
+                                      width: 100 * imageItem.scale,
+                                      height: 100 * imageItem.scale,
                                       child: Stack(
                                         children: [
                                           ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
                                             child: Transform.rotate(
                                               angle: imageItem.rotation,
                                               child: Image.network(
                                                 imageItem.imageUrl,
-                                                width: 100,
-                                                height: 100,
+                                                width: 100 * imageItem.scale,
+                                                height: 100 * imageItem.scale,
                                                 fit: BoxFit.cover,
                                                 loadingBuilder: (
                                                   context,
@@ -178,85 +180,12 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
                                               ),
                                             ),
                                           ),
-                                          // Rotasyon kontrol butonu
-                                          Positioned(
-                                            top: 2,
-                                            right: 2,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  imageItem.rotation +=
-                                                      0.785398; // 45 derece
-                                                });
-                                              },
-                                              child: Container(
-                                                width: 20,
-                                                height: 20,
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.rotate_right,
-                                                  size: 12,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          // Silme butonu
-                                          Positioned(
-                                            top: 2,
-                                            left: 2,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedImages.remove(
-                                                    imageItem,
-                                                  );
-                                                });
-                                              },
-                                              child: Container(
-                                                width: 20,
-                                                height: 20,
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.red,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.close,
-                                                  size: 12,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ),
                                   ),
                                 );
                               }).toList(),
-                              // Eğer fotoğraf varsa yardım metni
-                              if (selectedImages.isNotEmpty)
-                                Positioned(
-                                  bottom: 10,
-                                  left: 10,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.7),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Text(
-                                      'Sürükle: Taşı • Döndür: ⟲ • Sil: ✕',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ),
                             ],
                           ),
                 ),
@@ -283,14 +212,16 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
                             id: imageData.id,
                             imageUrl: imageData.imageUrl,
                             position: Offset(
-                              selectedImages.length * 20.0, // Üst üste binmesin
+                              selectedImages.length * 20.0,
                               selectedImages.length * 20.0,
                             ),
                             rotation: 0.0,
+                            scale: 1.0,
                           ),
                         );
                       }
                     });
+                    print(result.runtimeType);
                   }
                 },
                 text: "Select Clothes",
@@ -306,31 +237,4 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
       ),
     );
   }
-}
-
-class DraggableImageItem {
-  final String id;
-  final String imageUrl;
-  Offset position;
-  double rotation;
-
-  DraggableImageItem({
-    required this.id,
-    required this.imageUrl,
-    required this.position,
-    required this.rotation,
-  });
-}
-
-class ClothesSelectionResult {
-  final List<SelectedImageData> selectedImages;
-
-  ClothesSelectionResult({required this.selectedImages});
-}
-
-class SelectedImageData {
-  final String id;
-  final String imageUrl;
-
-  SelectedImageData({required this.id, required this.imageUrl});
 }

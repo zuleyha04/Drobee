@@ -1,21 +1,9 @@
 import 'package:drobee/presentation/home/cubit/home_cubit.dart';
 import 'package:drobee/presentation/home/cubit/home_state.dart';
+import 'package:drobee/presentation/stylePage/models/outfit_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-class SelectedImageData {
-  final String id;
-  final String imageUrl;
-
-  SelectedImageData({required this.id, required this.imageUrl});
-}
-
-class ClothesSelectionResult {
-  final List<SelectedImageData> selectedImages;
-
-  ClothesSelectionResult({required this.selectedImages});
-}
 
 class ClothesSelectionPage extends StatefulWidget {
   const ClothesSelectionPage({Key? key}) : super(key: key);
@@ -85,6 +73,7 @@ class _ClothesSelectionPageState extends State<ClothesSelectionPage> {
                   ),
               ],
             ),
+
             body: Builder(
               builder: (context) {
                 if (state.email == null) {

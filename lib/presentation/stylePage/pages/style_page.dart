@@ -1,5 +1,11 @@
+import 'package:drobee/presentation/stylePage/cubit/style_cubit.dart';
+import 'package:drobee/presentation/stylePage/cubit/style_state.dart';
 import 'package:drobee/presentation/stylePage/pages/outfit_picker_bottom_sheet.dart';
+import 'package:drobee/presentation/stylePage/widgets/style_app_bar.dart';
+import 'package:drobee/presentation/stylePage/widgets/style_empty_state.dart';
+import 'package:drobee/presentation/stylePage/widgets/style_error_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StylePage extends StatefulWidget {
   const StylePage({Key? key}) : super(key: key);
@@ -11,62 +17,31 @@ class StylePage extends StatefulWidget {
 class _StylePageState extends State<StylePage> {
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => StyleCubit()..loadOutfits(),
+      child: const _StylePageContent(),
+    );
+  }
+}
+
+class _StylePageContent extends StatelessWidget {
+  const _StylePageContent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Style',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                Icons.shopping_bag_outlined,
-                size: 40,
-                color: Colors.grey[400],
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Nothing Found',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Add outfits below',
-              style: TextStyle(fontSize: 16, color: Colors.grey[500]),
-            ),
-          ],
-        ),
+      appBar: const StyleAppBar(),
+      body: BlocBuilder<StyleCubit, StyleState>(
+        builder: (context, state) {
+          if (state is StyleLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is StyleError) {
+            return StyleErrorState(message: state.message);
+          } else {
+            return const StyleEmptyState();
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
