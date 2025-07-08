@@ -1,6 +1,8 @@
 import 'package:drobee/common/widget/button/custom_button.dart';
 import 'package:drobee/presentation/stylePage/models/outfit_data_model.dart';
 import 'package:drobee/presentation/stylePage/pages/clothes_selection.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OutfitPickerBottomSheet extends StatefulWidget {
@@ -13,6 +15,7 @@ class OutfitPickerBottomSheet extends StatefulWidget {
 
 class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
   List<DraggableImageItem> selectedImages = [];
+  bool _isSaving = false;
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +224,6 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
                         );
                       }
                     });
-                    print(result.runtimeType);
                   }
                 },
                 text: "Select Clothes",
@@ -229,12 +231,102 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
               const SizedBox(height: 16),
 
               // 💾 Save Button
-              CustomButton(onTap: () {}, text: "Save"),
+              CustomButton(
+                onTap: _isSaving ? () {} : _saveOutfit,
+                text: _isSaving ? "Saving..." : "Save",
+              ),
               const SizedBox(height: 16),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _saveOutfit() async {
+    // Seçili fotoğraf yoksa uyarı ver
+    if (selectedImages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select at least one item to save'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    // Kullanıcı giriş yapmamışsa uyarı ver
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please log in to save your outfit'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      // Firestore referansı
+      final docRef =
+          FirebaseFirestore.instance.collection('user_outfits').doc();
+
+      // DraggableImageItem'ları Map'e dönüştür
+      final outfitItemsData =
+          selectedImages
+              .map(
+                (item) => {
+                  'id': item.id,
+                  'image_url': item.imageUrl,
+                  'position_x': item.position.dx,
+                  'position_y': item.position.dy,
+                  'rotation': item.rotation,
+                  'scale': item.scale,
+                },
+              )
+              .toList();
+
+      // Outfit kombinini kaydet
+      await docRef.set({
+        'user_id': userId,
+        'outfit_name':
+            'My Outfit ${DateTime.now().day}/${DateTime.now().month}',
+        'outfit_items': outfitItemsData,
+        'created_at': FieldValue.serverTimestamp(),
+        'updated_at': FieldValue.serverTimestamp(),
+      });
+
+      // Başarılı mesaj göster
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Outfit saved successfully! ✨'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Sayfayı kapat ve sonucu geri gönder
+      Navigator.pop(context, {
+        'success': true,
+        'outfitId': docRef.id,
+        'message': 'Outfit saved successfully',
+      });
+    } catch (e) {
+      // Hata mesajı göster
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error saving outfit: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isSaving = false;
+      });
+    }
   }
 }
