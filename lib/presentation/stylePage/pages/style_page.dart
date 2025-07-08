@@ -1,8 +1,8 @@
+import 'package:drobee/common/widget/pageTitle/page_title.dart';
 import 'package:drobee/data/services/firestore_database_service.dart';
 import 'package:drobee/presentation/stylePage/cubit/style_cubit.dart';
 import 'package:drobee/presentation/stylePage/cubit/style_state.dart';
 import 'package:drobee/presentation/stylePage/pages/outfit_picker_bottom_sheet.dart';
-import 'package:drobee/presentation/stylePage/widgets/style_app_bar.dart';
 import 'package:drobee/presentation/stylePage/widgets/style_empty_state.dart';
 import 'package:drobee/presentation/stylePage/widgets/style_error_state.dart';
 import 'package:flutter/material.dart';
@@ -36,40 +36,66 @@ class _StylePageContentState extends State<_StylePageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: const StyleAppBar(),
-      body: BlocBuilder<StyleCubit, StyleState>(
-        builder: (context, state) {
-          if (state is StyleLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is StyleError) {
-            return StyleErrorState(message: state.message);
-          } else {
-            // Outfitler varsa liste göster, yoksa empty state göster
-            return StreamBuilder<List<Map<String, dynamic>>>(
-              stream: FirestoreService.getUserOutfitsStream(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ), // Daha dar padding
+          child: BlocBuilder<StyleCubit, StyleState>(
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+                  const PageTitle('Style'),
+                  const SizedBox(
+                    height: 16,
+                  ), // Görsellerden ayırmak için yeterli
+                  Expanded(
+                    child: Builder(
+                      builder: (context) {
+                        if (state is StyleLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is StyleError) {
+                          return StyleErrorState(message: state.message);
+                        } else {
+                          return StreamBuilder<List<Map<String, dynamic>>>(
+                            stream: FirestoreService.getUserOutfitsStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
 
-                if (snapshot.hasError) {
-                  return StyleErrorState(
-                    message: 'Error loading outfits: ${snapshot.error}',
-                  );
-                }
+                              if (snapshot.hasError) {
+                                return StyleErrorState(
+                                  message:
+                                      'Error loading outfits: ${snapshot.error}',
+                                );
+                              }
 
-                final outfits = snapshot.data ?? [];
+                              final outfits = snapshot.data ?? [];
 
-                if (outfits.isEmpty) {
-                  return const StyleEmptyState();
-                }
+                              if (outfits.isEmpty) {
+                                return const StyleEmptyState();
+                              }
 
-                return _buildOutfitsList(outfits);
-              },
-            );
-          }
-        },
+                              return _buildOutfitsList(outfits);
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -79,7 +105,6 @@ class _StylePageContentState extends State<_StylePageContent> {
             backgroundColor: Colors.transparent,
             builder: (context) => const OutfitPickerBottomSheet(),
           ).then((_) {
-            // Bottom sheet kapandığında sayfayı yenile
             setState(() {});
           });
         },

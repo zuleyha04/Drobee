@@ -67,7 +67,23 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
                     border: Border.all(color: Colors.grey[300]!, width: 1),
                   ),
                   child:
-                      selectedImages.isEmpty
+                      _isSaving
+                          ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const CircularProgressIndicator(),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Saving your outfit...',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          )
+                          : selectedImages.isEmpty
                           ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -198,34 +214,39 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
 
               // 👕 Select Clothes Button
               CustomButton(
-                onTap: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ClothesSelectionPage(),
-                    ),
-                  );
-
-                  if (result != null && result is ClothesSelectionResult) {
-                    setState(() {
-                      // Yeni seçilen fotoğrafları ekle
-                      for (var imageData in result.selectedImages) {
-                        selectedImages.add(
-                          DraggableImageItem(
-                            id: imageData.id,
-                            imageUrl: imageData.imageUrl,
-                            position: Offset(
-                              selectedImages.length * 20.0,
-                              selectedImages.length * 20.0,
+                onTap:
+                    _isSaving
+                        ? () {}
+                        : () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const ClothesSelectionPage(),
                             ),
-                            rotation: 0.0,
-                            scale: 1.0,
-                          ),
-                        );
-                      }
-                    });
-                  }
-                },
+                          );
+
+                          if (result != null &&
+                              result is ClothesSelectionResult) {
+                            setState(() {
+                              // Yeni seçilen fotoğrafları ekle
+                              for (var imageData in result.selectedImages) {
+                                selectedImages.add(
+                                  DraggableImageItem(
+                                    id: imageData.id,
+                                    imageUrl: imageData.imageUrl,
+                                    position: Offset(
+                                      selectedImages.length * 20.0,
+                                      selectedImages.length * 20.0,
+                                    ),
+                                    rotation: 0.0,
+                                    scale: 1.0,
+                                  ),
+                                );
+                              }
+                            });
+                          }
+                        },
                 text: "Select Clothes",
               ),
               const SizedBox(height: 16),
