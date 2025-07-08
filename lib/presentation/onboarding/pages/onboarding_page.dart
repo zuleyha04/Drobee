@@ -1,3 +1,4 @@
+import 'package:drobee/common/navigator/app_navigator.dart';
 import 'package:drobee/presentation/login/pages/login_page.dart';
 import 'package:drobee/presentation/signup/pages/sign_up_page.dart';
 import 'package:drobee/presentation/onboarding/model/onboarding_model.dart';
@@ -68,11 +69,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   }
 
   void _handleLogin() {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => LoginPage()));
+    AppNavigator.pushReplacement(context, LoginPage());
   }
 
   void _handleSignUp() {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => SignUpPage()));
+    AppNavigator.pushReplacement(context, SignUpPage());
   }
 
   @override

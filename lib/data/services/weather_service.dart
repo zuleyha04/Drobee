@@ -15,17 +15,17 @@ class WeatherService {
         final data = json.decode(response.body);
         return WeatherModel.fromJson(data);
       } else if (response.statusCode == 404) {
-        throw Exception(
-          'Şehir bulunamadı. Lütfen geçerli bir şehir adı girin.',
-        );
+        throw Exception('City not found. Please enter a valid city name.');
       } else {
-        throw Exception('Hava durumu bilgisi alınamadı');
+        throw Exception('Failed to retrieve weather information.');
       }
     } catch (e) {
-      if (e.toString().contains('Şehir bulunamadı')) {
+      if (e.toString().contains('City not found')) {
         rethrow;
       }
-      throw Exception('Bağlantı hatası. İnternet bağlantınızı kontrol edin.');
+      throw Exception(
+        'Connection error. Please check your internet connection.',
+      );
     }
   }
 }

@@ -38,7 +38,7 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
       emit(state.copyWith(isLoading: false, isProcessing: true));
       await _processPickedImage(selectedFile);
     } catch (e) {
-      _showError('Resim seçme hatası: $e');
+      _showError('Image selection error: $e');
       emit(state.copyWith(isLoading: false, isProcessing: false));
     }
   }
@@ -82,12 +82,12 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
           emit(state.copyWith(uploadedImageUrl: imageUrl));
           return imageUrl;
         }
-        _showError('Yüklenen resim linki alınamadı.');
+        _showError('Failed to retrieve uploaded image link.');
       } else {
-        _showError('Sunucu hatası: ${response.statusCode}');
+        _showError('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      _showError('Yükleme hatası: $e');
+      _showError('Upload error: $e');
     } finally {
       emit(state.copyWith(isUploading: false));
     }
@@ -105,10 +105,10 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
   Future<void> savePhotoWithWeathers() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (state.displayImage == null) {
-      return setErrorMessage('Lütfen bir fotoğraf seçin');
+      return setErrorMessage('Please select a photo');
     }
     if (state.selectedWeathers.isEmpty) {
-      return setErrorMessage('Lütfen en az bir hava durumu seçin');
+      return setErrorMessage('Please select at least one weather condition');
     }
 
     try {
@@ -120,7 +120,7 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
           weatherTags: state.selectedWeathers,
         );
 
-        setSuccessMessage('Fotoğraf başarıyla yüklendi ve kaydedildi!');
+        setSuccessMessage('Photo uploaded and saved successfully!');
         emit(
           state.copyWith(
             selectedImage: null,
@@ -130,10 +130,10 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
           ),
         );
       } else {
-        setErrorMessage('Resim yükleme başarısız');
+        setErrorMessage('Image upload failed');
       }
     } catch (e) {
-      setErrorMessage('Kaydetme hatası: $e');
+      setErrorMessage('Save error: $e');
     }
   }
 
@@ -142,10 +142,10 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
     Function(String) onError,
   ) async {
     if (state.displayImage == null) {
-      return onError('Lütfen bir fotoğraf seçin.');
+      return onError('Please select a photo.');
     }
     if (state.selectedWeathers.isEmpty) {
-      return onError('Lütfen en az bir hava durumu seçin.');
+      return onError('Please select at least one weather condition.');
     }
 
     try {
@@ -160,10 +160,10 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
           ),
         );
       } else {
-        onError('Resim yükleme başarısız oldu.');
+        onError('Image upload failed.');
       }
     } catch (e) {
-      onError('Beklenmeyen hata: $e');
+      onError('Unexpected error: $e');
     }
   }
 
@@ -189,8 +189,7 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
         state.copyWith(
           processedImage: image,
           isProcessing: false,
-          error:
-              'Arka plan silme işlemi başarısız, orijinal resim kullanılacak',
+          error: 'Background removal failed, original image will be used',
         ),
       );
     }

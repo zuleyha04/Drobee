@@ -1,4 +1,5 @@
 import 'package:drobee/common/widget/pageTitle/page_title.dart';
+import 'package:drobee/core/utils/app_flushbar.dart';
 import 'package:drobee/data/services/firestore_database_service.dart';
 import 'package:drobee/presentation/stylePage/cubit/style_cubit.dart';
 import 'package:drobee/presentation/stylePage/cubit/style_state.dart';
@@ -340,18 +341,14 @@ class _StylePageContentState extends State<_StylePageContent> {
                   Navigator.pop(context);
                   try {
                     await FirestoreService.deleteOutfit(outfitId);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Outfit deleted successfully'),
-                        backgroundColor: Colors.green,
-                      ),
+                    await AppFlushbar.showSuccess(
+                      context,
+                      'Outfit deleted successfully',
                     );
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error deleting outfit: $e'),
-                        backgroundColor: Colors.red,
-                      ),
+                    await AppFlushbar.showError(
+                      context,
+                      'Error deleting outfit: $e',
                     );
                   }
                 },

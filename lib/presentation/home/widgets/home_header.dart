@@ -8,12 +8,12 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: const [
-        SizedBox(height: 16), // Üst boşluk
+        SizedBox(height: 16),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: PageTitle('Closet'),
         ),
-        SizedBox(height: 16), // Alt boşluk
+        SizedBox(height: 16),
       ],
     );
   }

@@ -106,7 +106,7 @@ class PhotoPickerBottomSheet extends StatelessWidget {
         children: [
           CircularProgressIndicator(),
           SizedBox(height: 16),
-          Text('Resim seçiliyor...'),
+          Text('Loading image...'),
         ],
       );
     }
@@ -117,7 +117,7 @@ class PhotoPickerBottomSheet extends StatelessWidget {
         children: [
           CircularProgressIndicator(),
           SizedBox(height: 16),
-          Text('Arka plan siliniyor...'),
+          Text('Removing background...'),
         ],
       );
     }

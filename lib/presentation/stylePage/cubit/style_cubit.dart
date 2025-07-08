@@ -7,21 +7,10 @@ class StyleCubit extends Cubit<StyleState> {
   void loadOutfits() {
     emit(StyleLoading());
     try {
-      // Burada outfit verilerinizi yükleyebilirsiniz
-      // Örneğin: API çağrısı, local storage vb.
       final outfits = <dynamic>[]; // Şimdilik boş liste
       emit(StyleLoaded(outfits: outfits));
     } catch (e) {
       emit(StyleError(message: e.toString()));
-    }
-  }
-
-  void addOutfit(dynamic outfit) {
-    final currentState = state;
-    if (currentState is StyleLoaded) {
-      final updatedOutfits = List<dynamic>.from(currentState.outfits)
-        ..add(outfit);
-      emit(StyleLoaded(outfits: updatedOutfits));
     }
   }
 

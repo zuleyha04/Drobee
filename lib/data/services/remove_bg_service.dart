@@ -7,10 +7,10 @@ import 'package:path_provider/path_provider.dart';
 class RemoveBgService {
   static Future<File?> removeBackground(File imageFile) async {
     try {
-      // Dosya boyutu kontrolü (Remove.bg 12MB limit)
+      // File size check (Remove.bg 12MB limit)
       int fileSizeInBytes = await imageFile.length();
       if (fileSizeInBytes > 12 * 1024 * 1024) {
-        throw Exception('Dosya çok büyük (maksimum 12MB)');
+        throw Exception('File is too large (maximum 12MB)');
       }
 
       var request = http.MultipartRequest(
@@ -29,7 +29,7 @@ class RemoveBgService {
       if (response.statusCode == 200) {
         Uint8List imageBytes = await response.stream.toBytes();
 
-        // Geçici dosya oluştur
+        // Create temporary file
         final Directory tempDir = await getTemporaryDirectory();
         final String tempPath =
             '${tempDir.path}/no_bg_${DateTime.now().millisecondsSinceEpoch}.png';
@@ -38,12 +38,12 @@ class RemoveBgService {
 
         return processedFile;
       } else if (response.statusCode == 402) {
-        throw Exception('API limitiniz doldu');
+        throw Exception('Your API limit has been reached');
       } else {
-        throw Exception('Arka plan silme hatası (${response.statusCode})');
+        throw Exception('Background removal error (${response.statusCode})');
       }
     } catch (e) {
-      throw Exception('Remove.bg hatası: $e');
+      throw Exception('Remove.bg error: $e');
     }
   }
 }

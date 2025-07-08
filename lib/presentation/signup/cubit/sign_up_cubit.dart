@@ -19,7 +19,7 @@ class SignupCubit extends Cubit<SignupState> {
 
       final GoogleSignInAccount? account = await googleSignIn.signIn();
       if (account == null) {
-        emit(SignupInitial()); // kullanıcı iptal etti
+        emit(SignupInitial());
         return;
       }
 
@@ -37,25 +37,25 @@ class SignupCubit extends Cubit<SignupState> {
       if (userCredential.user != null) {
         emit(SignupSuccess(userCredential.user!));
       } else {
-        emit(SignupFailure('Google ile kayıt başarısız.'));
+        emit(SignupFailure('Sign up with Google failed.'));
       }
     } on FirebaseAuthException catch (e) {
       emit(SignupFailure(_mapFirebaseErrorToMessage(e)));
     } catch (e) {
-      emit(SignupFailure('Beklenmeyen hata: ${e.toString()}'));
+      emit(SignupFailure('Unexpected error: ${e.toString()}'));
     }
   }
 
   String _mapFirebaseErrorToMessage(FirebaseAuthException e) {
     switch (e.code) {
       case 'email-already-in-use':
-        return 'Bu email zaten kullanımda';
+        return 'This email is already in use';
       case 'invalid-credential':
-        return 'Geçersiz kimlik bilgisi';
+        return 'Invalid credentials';
       case 'operation-not-allowed':
-        return 'Bu işlem izni devre dışı';
+        return 'This operation is disabled';
       default:
-        return 'Hata: ${e.message ?? 'Bilinmeyen hata'}';
+        return 'Error: ${e.message ?? 'Unknown error'}';
     }
   }
 

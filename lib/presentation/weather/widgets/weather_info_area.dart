@@ -20,7 +20,7 @@ class WeatherInfoArea extends StatelessWidget {
         if (weatherState is WeatherInitial) {
           return const Center(
             child: Text(
-              'Şehir adını girin ve hava durumunu öğrenin',
+              'Enter a city name to get the weather',
               style: TextStyle(fontSize: 18),
               textAlign: TextAlign.center,
             ),
@@ -47,7 +47,7 @@ class WeatherInfoArea extends StatelessWidget {
                       city.isNotEmpty ? city : 'Ankara',
                     );
                   },
-                  child: const Text('Tekrar Dene'),
+                  child: const Text('Try Again'),
                 ),
               ],
             ),
@@ -76,7 +76,7 @@ class WeatherInfoArea extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      "Bu hava durumuna uygun parçalar: ($weatherTag)",
+                      "Items suitable for this weather: ($weatherTag)",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -88,9 +88,7 @@ class WeatherInfoArea extends StatelessWidget {
                     child:
                         filteredImages.isEmpty
                             ? const Center(
-                              child: Text(
-                                "Bu hava durumuna uygun parça bulunamadı.",
-                              ),
+                              child: Text("No items found for this weather."),
                             )
                             : GridView.builder(
                               padding: const EdgeInsets.all(8),

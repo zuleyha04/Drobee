@@ -17,7 +17,7 @@ class CitySearchCard extends StatelessWidget {
             child: TextField(
               controller: cityController,
               decoration: const InputDecoration(
-                hintText: 'Şehir adını girin (örn: İstanbul, Ankara)',
+                hintText: 'Enter a city name',
                 border: InputBorder.none,
                 prefixIcon: Icon(Icons.location_city),
               ),

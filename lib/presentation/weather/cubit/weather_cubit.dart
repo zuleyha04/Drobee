@@ -11,7 +11,7 @@ class WeatherCubit extends Cubit<WeatherState> {
     if (isClosed) return;
 
     if (cityName.trim().isEmpty) {
-      if (!isClosed) emit(const WeatherError('Lütfen bir şehir adı girin'));
+      if (!isClosed) emit(const WeatherError('Please enter a city name'));
       return;
     }
 

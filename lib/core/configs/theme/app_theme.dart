@@ -20,15 +20,6 @@ class AppTheme {
       onBackground: AppColors.textPrimary,
     ),
 
-    // SnackBar teması
-    snackBarTheme: const SnackBarThemeData(
-      backgroundColor: AppColors.primary,
-      contentTextStyle: TextStyle(color: AppColors.textWhite),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-      ),
-    ),
-
     // Input decoration teması
     inputDecorationTheme: InputDecorationTheme(
       filled: true,

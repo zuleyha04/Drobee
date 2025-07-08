@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 class AppFlushbar {
-  static void showSuccess(BuildContext context, String message) {
-    Flushbar(
+  static Future<void> showSuccess(BuildContext context, String message) {
+    return Flushbar(
       message: message,
       backgroundColor: Colors.green,
       margin: const EdgeInsets.all(12),
@@ -16,8 +16,8 @@ class AppFlushbar {
     ).show(context);
   }
 
-  static void showError(BuildContext context, String message) {
-    Flushbar(
+  static Future<void> showError(BuildContext context, String message) {
+    return Flushbar(
       message: message,
       backgroundColor: Colors.red,
       margin: const EdgeInsets.all(12),

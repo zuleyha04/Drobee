@@ -1,3 +1,4 @@
+import 'package:drobee/common/navigator/app_navigator.dart';
 import 'package:drobee/core/configs/textStyles/text_styles.dart';
 import 'package:drobee/presentation/resetPassword/pages/reset_password_page.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +25,7 @@ class ResetPasswordWidget extends StatelessWidget {
               baseline: TextBaseline.alphabetic,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ResetPasswordPage(),
-                    ),
-                  );
+                  AppNavigator.pushReplacement(context, ResetPasswordPage());
                 },
                 child: Text(text2, style: AppTextStyles.boldPrimaryText),
               ),

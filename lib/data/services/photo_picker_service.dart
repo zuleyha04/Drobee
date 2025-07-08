@@ -14,7 +14,7 @@ class PhotoPickerService {
       );
       return pickedFile != null ? File(pickedFile.path) : null;
     } catch (e) {
-      throw Exception('Fotoğraf seçilemedi: $e');
+      throw Exception('Failed to select photo: $e');
     }
   }
 
@@ -22,7 +22,7 @@ class PhotoPickerService {
     try {
       return await RemoveBgService.removeBackground(originalImage);
     } catch (e) {
-      throw Exception('Fotoğraf işleme hatası: $e');
+      throw Exception('Photo processing error: $e');
     }
   }
 }

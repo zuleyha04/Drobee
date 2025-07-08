@@ -25,7 +25,7 @@ class HomeCubit extends Cubit<HomeState> {
     _imagesSubscription?.cancel();
 
     if (_firebaseAuth.currentUser == null) {
-      emit(state.copyWith(error: 'Kullanıcı girişi gerekli'));
+      emit(state.copyWith(error: 'User authentication required'));
       return;
     }
 
@@ -35,7 +35,7 @@ class HomeCubit extends Cubit<HomeState> {
       },
       onError: (error) {
         print('Firestore Error: $error');
-        emit(state.copyWith(error: 'Veri yükleme hatası: ${error.toString()}'));
+        emit(state.copyWith(error: 'Data upload error: ${error.toString()}'));
       },
     );
   }

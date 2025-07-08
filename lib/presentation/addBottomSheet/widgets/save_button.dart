@@ -54,7 +54,7 @@ class SaveButton extends StatelessWidget {
                     border: Border.all(color: Colors.orange.withOpacity(0.3)),
                   ),
                   child: const Text(
-                    'Arka plan siliniyor...',
+                    'Removing background...',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Colors.orange,
@@ -79,7 +79,7 @@ class SaveButton extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Seçilen Hava Durumları:',
+                        'Selected Weather Conditions:',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
@@ -126,7 +126,7 @@ class SaveButton extends StatelessWidget {
                     border: Border.all(color: Colors.blue.withOpacity(0.3)),
                   ),
                   child: const Text(
-                    'Resim yükleniyor ve veritabanına kaydediliyor...',
+                    'Uploading image and saving to database...',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Colors.blue,

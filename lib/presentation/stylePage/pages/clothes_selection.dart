@@ -92,7 +92,7 @@ class _ClothesSelectionPageState extends State<ClothesSelectionPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Hata: ${state.error}',
+                          'Error: ${state.error}',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
@@ -115,12 +115,12 @@ class _ClothesSelectionPageState extends State<ClothesSelectionPage> {
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'Henüz kıyafet fotoğrafınız yok',
+                          "You don't have any clothing photos yet",
                           style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                         SizedBox(height: 8),
                         Text(
-                          'Önce ana sayfadan kıyafet fotoğrafları ekleyin',
+                          'Please add clothing photos from the home page first',
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                       ],
@@ -141,8 +141,8 @@ class _ClothesSelectionPageState extends State<ClothesSelectionPage> {
                       ),
                       child: Text(
                         selectedImageIds.isEmpty
-                            ? 'Kıyafetlerinizi seçin'
-                            : '${selectedImageIds.length} kıyafet seçildi',
+                            ? 'Select your clothes'
+                            : '${selectedImageIds.length} item selected',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,

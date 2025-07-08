@@ -1,4 +1,5 @@
 import 'package:drobee/common/widget/button/custom_button.dart';
+import 'package:drobee/core/utils/app_flushbar.dart';
 import 'package:drobee/presentation/stylePage/models/outfit_data_model.dart';
 import 'package:drobee/presentation/stylePage/pages/clothes_selection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -254,7 +255,7 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
               // 💾 Save Button
               CustomButton(
                 onTap: _isSaving ? () {} : _saveOutfit,
-                text: _isSaving ? "Saving..." : "Save",
+                text: "Save",
               ),
               const SizedBox(height: 16),
             ],
@@ -267,11 +268,9 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
   Future<void> _saveOutfit() async {
     // Seçili fotoğraf yoksa uyarı ver
     if (selectedImages.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select at least one item to save'),
-          backgroundColor: Colors.orange,
-        ),
+      await AppFlushbar.showError(
+        context,
+        'Please select at least one item to save',
       );
       return;
     }
@@ -279,12 +278,7 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
     // Kullanıcı giriş yapmamışsa uyarı ver
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please log in to save your outfit'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      await AppFlushbar.showError(context, 'Please log in to save your outfit');
       return;
     }
 
@@ -323,12 +317,7 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
       });
 
       // Başarılı mesaj göster
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Outfit saved successfully! ✨'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      await AppFlushbar.showSuccess(context, 'Outfit saved successfully!');
 
       // Sayfayı kapat ve sonucu geri gönder
       Navigator.pop(context, {
@@ -338,11 +327,9 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
       });
     } catch (e) {
       // Hata mesajı göster
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error saving outfit: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+      await AppFlushbar.showSuccess(
+        context,
+        'Error saving outfit: ${e.toString()}',
       );
     } finally {
       setState(() {

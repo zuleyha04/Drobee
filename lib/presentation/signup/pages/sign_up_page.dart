@@ -1,5 +1,6 @@
 import 'package:drobee/common/widget/button/google_button.dart';
 import 'package:drobee/core/configs/theme/app_colors.dart';
+import 'package:drobee/core/utils/app_flushbar.dart';
 import 'package:drobee/presentation/signup/cubit/sign_up_cubit.dart';
 import 'package:drobee/presentation/signup/cubit/sign_up_state.dart';
 import 'package:drobee/presentation/signup/widgets/sign_up_email_button.dart';
@@ -16,7 +17,7 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      resizeToAvoidBottomInset: false, // Ekran kaymasını önler
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -39,9 +40,7 @@ class SignUpPage extends StatelessWidget {
                   );
                 });
               } else if (state is SignupFailure) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+                AppFlushbar.showError(context, state.errorMessage);
               }
             },
             child: Column(

@@ -24,11 +24,11 @@ class HomePage extends StatelessWidget {
                 builder: (context, state) {
                   if (state.email == null) {
                     return const Center(
-                      child: Text('Kullanıcı bilgisi bulunamadı'),
+                      child: Text('User information not found'),
                     );
                   }
                   if (state.error != null) {
-                    return Center(child: Text('Hata: ${state.error}'));
+                    return Center(child: Text('Error: ${state.error}'));
                   }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
