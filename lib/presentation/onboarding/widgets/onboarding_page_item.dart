@@ -4,6 +4,7 @@ import 'package:drobee/core/configs/textStyles/text_styles.dart';
 import 'package:drobee/core/configs/theme/app_colors.dart';
 import 'package:drobee/presentation/onboarding/model/onboarding_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'login_text_widget.dart';
 import 'onboarding_animation.dart';
 
@@ -37,7 +38,7 @@ class OnBoardingPageItem extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               children: [
                 Row(
@@ -47,16 +48,16 @@ class OnBoardingPageItem extends StatelessWidget {
                       SkipButton(onPressed: onSkip),
                   ],
                 ),
-                const SizedBox(height: 80),
+                SizedBox(height: 80.h),
                 OnBoardingAnimation(animationPath: item.animation),
-                const SizedBox(height: 90),
-                if (index == totalPages - 1) const SizedBox(height: 40),
+                SizedBox(height: 90.h),
+                if (index == totalPages - 1) SizedBox(height: 40.h),
                 Text(
                   item.title,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.mainTitleStyle,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   item.subTitle,
                   textAlign: TextAlign.center,
@@ -70,7 +71,7 @@ class OnBoardingPageItem extends StatelessWidget {
                     text: 'Already have an account ? ',
                   ),
                 ] else ...[
-                  const SizedBox(height: 100),
+                  SizedBox(height: 100.h),
                   CustomButton(text: 'Next', onTap: onNext),
                 ],
               ],

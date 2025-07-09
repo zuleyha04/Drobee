@@ -3,6 +3,7 @@ import 'package:drobee/presentation/settingPage/widgets/delete_account_tile.dart
 import 'package:drobee/presentation/settingPage/widgets/logout_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -14,21 +15,21 @@ class SettingPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.r),
           child: Column(
             children: [
               const PageTitle('Settings'),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
               if (user != null) ...[
                 Text(
                   user.email ?? 'No email',
-                  style: const TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18.sp),
                 ),
-                const Divider(height: 32),
+                Divider(height: 32.h),
               ],
               const LogoutTile(),
               const DeleteAccountTile(),
-              const Divider(height: 32),
+              Divider(height: 32.h),
               Text(' - Version 1.0.0 -'),
             ],
           ),

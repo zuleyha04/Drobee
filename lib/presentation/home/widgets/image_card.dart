@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:drobee/presentation/home/models/user_image_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:drobee/presentation/home/cubit/home_cubit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Eklendi
 
 class ImageCard extends StatelessWidget {
   final UserImageModel image;
@@ -17,11 +18,11 @@ class ImageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         color: Colors.grey[100],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         child: Stack(
           children: [
             Positioned.fill(
@@ -33,11 +34,11 @@ class ImageCard extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 },
                 errorBuilder: (context, error, stackTrace) {
-                  return const Center(
+                  return Center(
                     child: Icon(
                       Icons.error_outline,
                       color: Colors.grey,
-                      size: 32,
+                      size: 32.sp,
                     ),
                   );
                 },
@@ -45,16 +46,16 @@ class ImageCard extends StatelessWidget {
             ),
             if (showDeleteButton)
               Positioned(
-                top: 8,
-                right: 8,
+                top: 8.h,
+                right: 8.w,
                 child: GestureDetector(
                   onTap: () {
                     context.read<HomeCubit>().deleteImage(image.id);
                   },
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    radius: 16,
-                    child: Icon(Icons.close, size: 18, color: Colors.white),
+                    radius: 16.r,
+                    child: Icon(Icons.close, size: 18.sp, color: Colors.white),
                   ),
                 ),
               ),

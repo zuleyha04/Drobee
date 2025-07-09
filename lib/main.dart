@@ -5,6 +5,7 @@ import 'package:drobee/presentation/splash/pages/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,13 +18,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SplashCubit()..appStarted(),
-      child: MaterialApp(
-        title: 'Flutter App',
-        theme: AppTheme.appTheme,
-        debugShowCheckedModeBanner: false,
-        home: const SplashPage(),
+    return ScreenUtilInit(
+      designSize: const Size(360, 740),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: BlocProvider(
+        create: (context) => SplashCubit()..appStarted(),
+        child: MaterialApp(
+          title: 'Flutter App',
+          theme: AppTheme.appTheme,
+          debugShowCheckedModeBanner: false,
+          home: const SplashPage(),
+        ),
       ),
     );
   }

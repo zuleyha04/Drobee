@@ -9,6 +9,7 @@ import 'package:drobee/presentation/home/pages/home_page.dart';
 import 'package:drobee/presentation/login/widgets/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CreateAccountPage extends StatelessWidget {
   const CreateAccountPage({super.key});
@@ -59,7 +60,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+        icon: Icon(Icons.arrow_back, color: Colors.black, size: 28.sp),
         onPressed: () => Navigator.pop(context),
       ),
     );
@@ -81,16 +82,16 @@ class _CreateAccountViewState extends State<CreateAccountView> {
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   const CreateAccountTitle(text: 'Creating your account !'),
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30.h),
                   _buildLoginForm(),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32.h),
                   _buildCreateAccountButton(state),
                 ],
               ),

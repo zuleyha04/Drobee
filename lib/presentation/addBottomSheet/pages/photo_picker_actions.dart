@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:drobee/core/configs/theme/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Eklendi
 
 class PhotoPickerActions extends StatelessWidget {
   const PhotoPickerActions({super.key});
@@ -27,7 +28,7 @@ class PhotoPickerActions extends StatelessWidget {
                 style: _buttonStyle,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             Expanded(
               child: OutlinedButton.icon(
                 onPressed:
@@ -48,8 +49,8 @@ class PhotoPickerActions extends StatelessWidget {
   }
 
   ButtonStyle get _buttonStyle => OutlinedButton.styleFrom(
-    padding: const EdgeInsets.symmetric(vertical: 12),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+    padding: EdgeInsets.symmetric(vertical: 12.h),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.r)),
     side: const BorderSide(color: AppColors.primary),
     foregroundColor: AppColors.primary,
   );

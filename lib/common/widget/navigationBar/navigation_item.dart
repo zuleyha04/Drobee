@@ -35,7 +35,7 @@ class NavigationItem extends StatelessWidget {
   Widget _buildItemContainer(ThemeData theme) {
     return Container(
       height: NavigationConstants.itemHeight,
-      margin: const EdgeInsets.symmetric(
+      margin: EdgeInsets.symmetric(
         horizontal: NavigationConstants.itemMarginHorizontal,
         vertical: NavigationConstants.itemMarginVertical,
       ),
@@ -47,7 +47,7 @@ class NavigationItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildIconContainer(theme),
-          const SizedBox(height: NavigationConstants.spaceBetweenIconAndText),
+          SizedBox(height: NavigationConstants.spaceBetweenIconAndText),
           _buildLabel(theme),
         ],
       ),
@@ -58,7 +58,7 @@ class NavigationItem extends StatelessWidget {
     return AnimatedContainer(
       duration: NavigationConstants.animationDuration,
       curve: NavigationConstants.animationCurve,
-      padding: const EdgeInsets.all(NavigationConstants.iconPadding),
+      padding: EdgeInsets.all(NavigationConstants.iconPadding),
       decoration: BoxDecoration(
         color: isSelected ? theme.primaryColor : Colors.transparent,
         borderRadius: BorderRadius.circular(

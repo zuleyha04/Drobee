@@ -5,6 +5,7 @@ import 'package:drobee/presentation/addBottomSheet/widgets/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:drobee/presentation/addBottomSheet/widgets/weather_chips.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PhotoPickerBottomSheet extends StatelessWidget {
   const PhotoPickerBottomSheet({super.key});
@@ -27,11 +28,11 @@ class PhotoPickerBottomSheet extends StatelessWidget {
 
           return Container(
             height: MediaQuery.of(context).size.height * 0.85,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
+                topLeft: Radius.circular(24.r),
+                topRight: Radius.circular(24.r),
               ),
             ),
             child: Column(
@@ -39,18 +40,18 @@ class PhotoPickerBottomSheet extends StatelessWidget {
                 _buildHeader(context),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Column(
                       children: [
                         _buildPhotoArea(state, context),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                         const PhotoPickerActions(),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                         const WeatherChips(options: _weatherOptions),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20.h),
                         const SaveButton(),
                         SizedBox(
-                          height: MediaQuery.of(context).padding.bottom + 20,
+                          height: MediaQuery.of(context).padding.bottom + 20.h,
                         ),
                       ],
                     ),
@@ -66,13 +67,13 @@ class PhotoPickerBottomSheet extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.r),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "Add Your Items",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
           ),
           IconButton(
             onPressed: () {
@@ -91,7 +92,7 @@ class PhotoPickerBottomSheet extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Center(child: _buildPhotoContent(state, context)),
       ),
@@ -99,35 +100,33 @@ class PhotoPickerBottomSheet extends StatelessWidget {
   }
 
   Widget _buildPhotoContent(PhotoPickerState state, BuildContext context) {
-    // Loading durumları
     if (state.isLoading) {
-      return const Column(
+      return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('Loading image...'),
+          const CircularProgressIndicator(),
+          SizedBox(height: 16.h),
+          const Text('Loading image...'),
         ],
       );
     }
 
     if (state.isProcessing) {
-      return const Column(
+      return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('Removing background...'),
+          const CircularProgressIndicator(),
+          SizedBox(height: 16.h),
+          const Text('Removing background...'),
         ],
       );
     }
 
-    // Resim gösterimi (processedImage öncelikli, sonra selectedImage)
     if (state.displayImage != null) {
       return Stack(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             child: Image.file(
               state.displayImage!,
               width: double.infinity,
@@ -135,22 +134,21 @@ class PhotoPickerBottomSheet extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          // Sil butonu
           Positioned(
-            top: 8,
-            right: 8,
+            top: 8.h,
+            right: 8.w,
             child: GestureDetector(
               onTap: () {
                 print("Remove tapped");
                 context.read<PhotoPickerCubit>().removeImage();
               },
               child: Container(
-                padding: const EdgeInsets.all(4),
+                padding: EdgeInsets.all(4.r),
                 decoration: const BoxDecoration(
                   color: Colors.red,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.close, color: Colors.white, size: 16),
+                child: Icon(Icons.close, color: Colors.white, size: 16.sp),
               ),
             ),
           ),
@@ -158,15 +156,14 @@ class PhotoPickerBottomSheet extends StatelessWidget {
       );
     }
 
-    // Boş durum
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.image_outlined, size: 48, color: Colors.grey.shade500),
-        const SizedBox(height: 10),
+        Icon(Icons.image_outlined, size: 48.sp, color: Colors.grey.shade500),
+        SizedBox(height: 10.h),
         Text(
           "Add Photo",
-          style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+          style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade600),
         ),
       ],
     );

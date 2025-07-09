@@ -4,6 +4,7 @@ import 'package:drobee/core/configs/textStyles/text_styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:drobee/core/utils/app_flushbar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResetPasswordForm extends StatefulWidget {
   final String title;
@@ -35,11 +36,11 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
+        SizedBox(height: 20.h),
         Text(widget.title, style: AppTextStyles.mainTitleStyle),
-        const SizedBox(height: 16),
+        SizedBox(height: 16.h),
         Text(widget.description, style: AppTextStyles.descriptionTextStyle),
-        const SizedBox(height: 32),
+        SizedBox(height: 32.h),
         CustomTextField(
           controller: emailController,
           focusNode: emailFocusNode,
@@ -75,9 +76,9 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
               AppFlushbar.showError(context, message);
             }
           },
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
         ),
-        const SizedBox(height: 40),
+        SizedBox(height: 40.h),
       ],
     );
   }

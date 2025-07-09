@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NavigationConstants {
   static const List<IconData> icons = [
@@ -14,18 +15,18 @@ class NavigationConstants {
   static const Curve animationCurve = Curves.easeInOut;
 
   // Navigation Bar Styling
-  static const double navigationBarHeight = 80.0;
-  static const double navigationBarMargin = 16.0;
-  static const double navigationBarRadius = 25.0;
-  static const double itemHeight = 60.0;
-  static const double itemMarginHorizontal = 8.0;
-  static const double itemMarginVertical = 10.0;
-  static const double itemRadius = 20.0;
-  static const double iconContainerRadius = 12.0;
-  static const double iconPadding = 6.0;
-  static const double selectedIconSize = 24.0;
-  static const double unselectedIconSize = 22.0;
-  static const double selectedFontSize = 12.0;
-  static const double unselectedFontSize = 11.0;
-  static const double spaceBetweenIconAndText = 4.0;
+  static double get navigationBarHeight => 80.0.h;
+  static double get navigationBarMargin => 16.0.w;
+  static double get navigationBarRadius => 25.0.r;
+  static double get itemHeight => 60.0.h;
+  static double get itemMarginHorizontal => 8.0.w;
+  static double get itemMarginVertical => 10.0.h;
+  static double get itemRadius => 20.0.r;
+  static double get iconContainerRadius => 12.0.r;
+  static double get iconPadding => 6.0.w;
+  static double get selectedIconSize => 24.0.sp;
+  static double get unselectedIconSize => 22.0.sp;
+  static double get selectedFontSize => 12.0.sp;
+  static double get unselectedFontSize => 11.0.sp;
+  static double get spaceBetweenIconAndText => 4.0.h;
 }

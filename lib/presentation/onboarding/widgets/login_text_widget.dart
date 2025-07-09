@@ -1,5 +1,6 @@
 import 'package:drobee/core/configs/textStyles/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginTextWidget extends StatelessWidget {
   final String text;
@@ -14,7 +15,7 @@ class LoginTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.r),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

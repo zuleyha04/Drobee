@@ -7,6 +7,7 @@ import 'package:drobee/presentation/signup/widgets/sign_up_email_button.dart';
 import 'package:drobee/presentation/signup/widgets/sign_up_or_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../widgets/sign_up_title.dart';
 import '../../home/pages/home_page.dart';
 
@@ -22,12 +23,12 @@ class SignUpPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+          icon: Icon(Icons.arrow_back, color: Colors.black, size: 28.sp),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
         child: BlocProvider(
           create: (_) => SignupCubit(),
           child: BlocListener<SignupCubit, SignupState>(
@@ -46,13 +47,13 @@ class SignUpPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 const SignUpTitle(),
-                const SizedBox(height: 40),
+                SizedBox(height: 40.h),
                 const ContinueWithEmailButton(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32.h),
                 const OrDivider(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32.h),
 
                 /// Google butonu bloc ile kontrol ediliyor
                 BlocBuilder<SignupCubit, SignupState>(

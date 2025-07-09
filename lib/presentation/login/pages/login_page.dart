@@ -12,6 +12,7 @@ import 'package:drobee/presentation/login/cubit/login_cubit.dart';
 import 'package:drobee/presentation/login/cubit/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -46,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+            icon: Icon(Icons.arrow_back, color: Colors.black, size: 28.sp),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -67,20 +68,20 @@ class _LoginPageState extends State<LoginPage> {
               onTap: () => FocusScope.of(context).unfocus(),
               child: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       const LoginTitle(),
-                      const SizedBox(height: 30),
+                      SizedBox(height: 30.h),
                       LoginForm(
                         emailController: emailController,
                         passwordController: passwordController,
                         emailFocusNode: emailFocusNode,
                         passwordFocusNode: passwordFocusNode,
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24.h),
                       CustomButton(
                         text: 'Login',
                         onTap: () {
@@ -90,21 +91,21 @@ class _LoginPageState extends State<LoginPage> {
                           context.read<LoginCubit>().login(email, password);
                         },
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32.h),
                       const ResetPasswordWidget(
                         text1: 'Forgot Password? ',
                         text2: 'Reset',
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32.h),
                       const LoginDivider(),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32.h),
                       GoogleLoginButton(
                         isLoading: state is LoginLoading,
                         onPressed: () {
                           context.read<LoginCubit>().signInWithGoogle();
                         },
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12.h),
                     ],
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:drobee/common/constants/navigation_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'navigation_item.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
@@ -18,7 +19,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: NavigationConstants.navigationBarHeight,
-      margin: const EdgeInsets.all(NavigationConstants.navigationBarMargin),
+      margin: EdgeInsets.all(NavigationConstants.navigationBarMargin),
       decoration: _buildNavigationBarDecoration(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -36,8 +37,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
       boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.1),
-          blurRadius: 20,
-          offset: const Offset(0, 5),
+          blurRadius: 20.r,
+          offset: Offset(0, 5.h),
         ),
       ],
     );

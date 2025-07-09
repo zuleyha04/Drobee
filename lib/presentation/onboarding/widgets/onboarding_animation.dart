@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnBoardingAnimation extends StatelessWidget {
   final String animationPath;
@@ -9,13 +10,13 @@ class OnBoardingAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 500,
-      height: 200,
+      width: 500.w,
+      height: 200.h,
       child: Center(
         child: Lottie.asset(
           animationPath,
-          width: 400,
-          height: 200,
+          width: 400.w,
+          height: 200.h,
           fit: BoxFit.contain,
         ),
       ),

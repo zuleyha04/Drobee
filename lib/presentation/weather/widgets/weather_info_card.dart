@@ -1,5 +1,6 @@
 import 'package:drobee/presentation/weather/model/weather_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WeatherInfoCard extends StatelessWidget {
   final WeatherModel weather;
@@ -10,12 +11,12 @@ class WeatherInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           gradient: const LinearGradient(
             colors: [Color(0xFFE91E63), Color(0xFF5F3CBF)],
           ),
@@ -25,39 +26,36 @@ class WeatherInfoCard extends StatelessWidget {
           children: [
             Text(
               weather.cityName,
-              style: const TextStyle(
-                fontSize: 28,
+              style: TextStyle(
+                fontSize: 28.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.network(
                   'https://openweathermap.org/img/wn/${weather.icon}@2x.png',
-                  width: 80,
-                  height: 80,
+                  width: 80.w,
+                  height: 80.h,
                 ),
-                const SizedBox(width: 20),
+                SizedBox(width: 20.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '${weather.temperature.round()}°C',
-                      style: const TextStyle(
-                        fontSize: 30,
+                      style: TextStyle(
+                        fontSize: 30.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
                     Text(
                       weather.description.toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                      ),
+                      style: TextStyle(fontSize: 16.sp, color: Colors.white70),
                     ),
                   ],
                 ),

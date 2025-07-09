@@ -7,6 +7,7 @@ import 'package:drobee/presentation/weather/utils/weather_utils.dart';
 import 'package:drobee/presentation/weather/widgets/weather_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WeatherInfoArea extends StatelessWidget {
   final TextEditingController cityController;
@@ -18,10 +19,10 @@ class WeatherInfoArea extends StatelessWidget {
     return BlocBuilder<WeatherCubit, WeatherState>(
       builder: (context, weatherState) {
         if (weatherState is WeatherInitial) {
-          return const Center(
+          return Center(
             child: Text(
               'Enter a city name to get the weather',
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18.sp),
               textAlign: TextAlign.center,
             ),
           );
@@ -32,14 +33,14 @@ class WeatherInfoArea extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.error, size: 48, color: Colors.red),
-                const SizedBox(height: 16),
+                Icon(Icons.error, size: 48.sp, color: Colors.red),
+                SizedBox(height: 16.h),
                 Text(
                   weatherState.message,
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16.sp),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 ElevatedButton(
                   onPressed: () {
                     final city = cityController.text.trim();
@@ -47,7 +48,7 @@ class WeatherInfoArea extends StatelessWidget {
                       city.isNotEmpty ? city : 'Ankara',
                     );
                   },
-                  child: const Text('Try Again'),
+                  child: Text('Try Again', style: TextStyle(fontSize: 14.sp)),
                 ),
               ],
             ),
@@ -72,31 +73,34 @@ class WeatherInfoArea extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: WeatherInfoCard(weather: weatherState.weather),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: Text(
                       "Items suitable for this weather: ($weatherTag)",
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: TextStyle(
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Expanded(
                     child:
                         filteredImages.isEmpty
-                            ? const Center(
-                              child: Text("No items found for this weather."),
+                            ? Center(
+                              child: Text(
+                                "No items found for this weather.",
+                                style: TextStyle(fontSize: 14.sp),
+                              ),
                             )
                             : GridView.builder(
-                              padding: const EdgeInsets.all(8),
+                              padding: EdgeInsets.all(8.w),
                               gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                  SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
-                                    mainAxisSpacing: 8,
-                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8.h,
+                                    crossAxisSpacing: 8.w,
                                   ),
                               itemCount: filteredImages.length,
                               itemBuilder: (context, index) {

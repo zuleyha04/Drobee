@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BottomTextWidget extends StatelessWidget {
   final String text;
@@ -15,7 +16,7 @@ class BottomTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: bottomPadding,
+      bottom: bottomPadding.h,
       left: 0,
       right: 0,
       child: Center(
@@ -23,9 +24,9 @@ class BottomTextWidget extends StatelessWidget {
           text,
           style:
               style ??
-              const TextStyle(
+              TextStyle(
                 color: Colors.white,
-                fontSize: 25,
+                fontSize: 25.sp,
                 fontWeight: FontWeight.bold,
               ),
         ),
