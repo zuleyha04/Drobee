@@ -23,7 +23,7 @@ class _StylePageBodyState extends State<StylePageBody> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w), // Daha dar padding
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: BlocBuilder<StyleCubit, StyleState>(
             builder: (context, state) {
               return Column(
@@ -31,7 +31,6 @@ class _StylePageBodyState extends State<StylePageBody> {
                 children: [
                   SizedBox(height: 16.h),
                   const PageTitle('Style'),
-                  SizedBox(height: 16.h), // Görsellerden ayırmak için yeterli
                   Expanded(
                     child: Builder(
                       builder: (context) {

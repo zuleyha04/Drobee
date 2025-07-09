@@ -10,7 +10,8 @@ class OutfitGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.only(left: 0, right: 0, top: 16.h, bottom: 0),
+
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

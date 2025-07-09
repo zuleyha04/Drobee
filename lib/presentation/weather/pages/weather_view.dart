@@ -29,9 +29,15 @@ class _WeatherViewState extends State<WeatherView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsets.only(
+            top: 16.h,
+            left: 16.w,
+            right: 16.w,
+            bottom: 0,
+          ),
           child: Column(
             children: [
               const PageTitle('Weather'),
