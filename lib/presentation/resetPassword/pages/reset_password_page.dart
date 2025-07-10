@@ -1,4 +1,6 @@
+import 'package:drobee/common/navigator/app_navigator.dart';
 import 'package:drobee/core/configs/theme/app_colors.dart';
+import 'package:drobee/presentation/login/pages/login_page.dart';
 import 'package:drobee/presentation/resetPassword/widgets/reset_password_form_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +18,8 @@ class ResetPasswordPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 28.sp),
-          onPressed: () => Navigator.pop(context),
+          onPressed:
+              () => AppNavigator.pushReplacement(context, const LoginPage()),
         ),
       ),
       body: Padding(

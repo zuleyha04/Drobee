@@ -1,6 +1,8 @@
+import 'package:drobee/common/navigator/app_navigator.dart';
 import 'package:drobee/common/widget/button/google_button.dart';
 import 'package:drobee/core/configs/theme/app_colors.dart';
 import 'package:drobee/core/utils/app_flushbar.dart';
+import 'package:drobee/presentation/onboarding/pages/onboarding_page.dart';
 import 'package:drobee/presentation/signup/cubit/sign_up_cubit.dart';
 import 'package:drobee/presentation/signup/cubit/sign_up_state.dart';
 import 'package:drobee/presentation/signup/widgets/sign_up_email_button.dart';
@@ -24,7 +26,11 @@ class SignUpPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 28.sp),
-          onPressed: () => Navigator.pop(context),
+          onPressed:
+              () => AppNavigator.pushReplacement(
+                context,
+                OnBoardingPage(initialPage: 3),
+              ),
         ),
       ),
       body: Padding(

@@ -7,6 +7,7 @@ import 'package:drobee/presentation/createAccount/widgets/create_account_button.
 import 'package:drobee/presentation/createAccount/widgets/create_account_title.dart';
 import 'package:drobee/presentation/home/pages/home_page.dart';
 import 'package:drobee/presentation/login/widgets/login_form.dart';
+import 'package:drobee/presentation/signup/pages/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -61,7 +62,8 @@ class _CreateAccountViewState extends State<CreateAccountView> {
       elevation: 0,
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.black, size: 28.sp),
-        onPressed: () => Navigator.pop(context),
+        onPressed:
+            () => AppNavigator.pushReplacement(context, const SignUpPage()),
       ),
     );
   }

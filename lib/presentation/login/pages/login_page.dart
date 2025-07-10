@@ -10,6 +10,7 @@ import 'package:drobee/presentation/login/widgets/login_form.dart';
 import 'package:drobee/presentation/login/widgets/login_title.dart';
 import 'package:drobee/presentation/login/cubit/login_cubit.dart';
 import 'package:drobee/presentation/login/cubit/login_state.dart';
+import 'package:drobee/presentation/onboarding/pages/onboarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -48,7 +49,11 @@ class _LoginPageState extends State<LoginPage> {
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black, size: 28.sp),
-            onPressed: () => Navigator.pop(context),
+            onPressed:
+                () => AppNavigator.pushReplacement(
+                  context,
+                  OnBoardingPage(initialPage: 3),
+                ),
           ),
         ),
         body: BlocConsumer<LoginCubit, LoginState>(
