@@ -106,7 +106,7 @@ class WeatherInfoArea extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8.w),
                               child: Text(
-                                "Items suitable for this weather: ($weatherTag)",
+                                "Items suitable for this weather:",
                                 style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.bold,
