@@ -7,7 +7,7 @@ class AppTextStyles {
   // Başlık stilleri
   static TextStyle get mainTitleStyle => GoogleFonts.poppins(
     textStyle: TextStyle(
-      fontSize: 35.sp,
+      fontSize: 30.sp,
       fontWeight: FontWeight.bold,
       color: AppColors.textPrimary,
     ),
@@ -15,7 +15,7 @@ class AppTextStyles {
 
   static TextStyle get descriptionTextStyle => GoogleFonts.lato(
     textStyle: TextStyle(
-      fontSize: 18.sp,
+      fontSize: 16.sp,
       fontWeight: FontWeight.bold,
       color: AppColors.textSecondary,
     ),
@@ -50,7 +50,7 @@ class AppTextStyles {
 
   static TextStyle get thinBlackText => GoogleFonts.poppins(
     textStyle: TextStyle(
-      fontSize: 15.sp,
+      fontSize: 14.sp,
       fontWeight: FontWeight.normal,
       color: AppColors.textSecondary,
     ),

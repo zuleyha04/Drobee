@@ -11,11 +11,11 @@ class OutfitCanvas extends StatefulWidget {
   final Function(List<DraggableImageItem>) onImagesChanged;
 
   const OutfitCanvas({
-    Key? key,
+    super.key,
     required this.selectedImages,
     required this.isSaving,
     required this.onImagesChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<OutfitCanvas> createState() => _OutfitCanvasState();

@@ -7,10 +7,10 @@ class DraggableImageWidget extends StatefulWidget {
   final VoidCallback onImageChanged;
 
   const DraggableImageWidget({
-    Key? key,
+    super.key,
     required this.imageItem,
     required this.onImageChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<DraggableImageWidget> createState() => _DraggableImageWidgetState();

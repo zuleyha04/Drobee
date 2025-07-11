@@ -10,11 +10,11 @@ class ClothesSelectionBody extends StatelessWidget {
   final Function(String) onImageTap;
 
   const ClothesSelectionBody({
-    Key? key,
+    super.key,
     required this.state,
     required this.selectedImageIds,
     required this.onImageTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -30,15 +30,12 @@ class FreeImageHostService {
         if (jsonResponse['status_code'] == 200) {
           return jsonResponse['image']['url'];
         } else {
-          print('FreeImage.host error: ${jsonResponse['error']['message']}');
           return null;
         }
       } else {
-        print('HTTP error: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Upload error: $e');
       return null;
     }
   }

@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class OutfitItemCard extends StatelessWidget {
   final Map<String, dynamic> outfit;
 
-  const OutfitItemCard({Key? key, required this.outfit}) : super(key: key);
+  const OutfitItemCard({super.key, required this.outfit});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class OutfitItemCard extends StatelessWidget {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),

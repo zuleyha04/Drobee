@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SelectionHeader extends StatelessWidget {
   final int selectedCount;
 
-  const SelectionHeader({Key? key, required this.selectedCount})
-    : super(key: key);
+  const SelectionHeader({super.key, required this.selectedCount});
 
   @override
   Widget build(BuildContext context) {

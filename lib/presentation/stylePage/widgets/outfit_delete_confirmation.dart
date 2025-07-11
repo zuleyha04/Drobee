@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 class OutfitDeleteConfirmation extends StatelessWidget {
   final String outfitId;
 
-  const OutfitDeleteConfirmation({Key? key, required this.outfitId})
-    : super(key: key);
+  const OutfitDeleteConfirmation({super.key, required this.outfitId});
 
   @override
   Widget build(BuildContext context) {

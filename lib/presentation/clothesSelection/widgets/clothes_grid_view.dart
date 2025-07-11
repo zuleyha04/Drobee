@@ -10,11 +10,11 @@ class ClothesGridView extends StatelessWidget {
   final Function(String) onImageTap;
 
   const ClothesGridView({
-    Key? key,
+    super.key,
     required this.images,
     required this.selectedImageIds,
     required this.onImageTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

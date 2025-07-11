@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class OutfitGridView extends StatelessWidget {
   final List<Map<String, dynamic>> outfits;
 
-  const OutfitGridView({Key? key, required this.outfits}) : super(key: key);
+  const OutfitGridView({super.key, required this.outfits});
 
   @override
   Widget build(BuildContext context) {

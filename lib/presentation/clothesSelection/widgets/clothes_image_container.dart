@@ -6,10 +6,10 @@ class ClothesImageContainer extends StatelessWidget {
   final bool isSelected;
 
   const ClothesImageContainer({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

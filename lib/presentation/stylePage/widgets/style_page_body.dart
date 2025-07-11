@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StylePageBody extends StatefulWidget {
-  const StylePageBody({Key? key}) : super(key: key);
+  const StylePageBody({super.key});
 
   @override
   State<StylePageBody> createState() => _StylePageBodyState();

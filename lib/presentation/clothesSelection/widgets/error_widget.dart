@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ErrorWidget extends StatelessWidget {
   final String error;
 
-  const ErrorWidget({Key? key, required this.error}) : super(key: key);
+  const ErrorWidget({super.key, required this.error});
 
   @override
   Widget build(BuildContext context) {

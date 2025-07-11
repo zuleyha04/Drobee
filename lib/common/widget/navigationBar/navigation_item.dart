@@ -34,7 +34,7 @@ class NavigationItem extends StatelessWidget {
 
   Widget _buildItemContainer(ThemeData theme) {
     return Container(
-      height: NavigationConstants.itemHeight,
+      height: NavigationConstants.adaptiveItemHeight,
       margin: EdgeInsets.symmetric(
         horizontal: NavigationConstants.itemMarginHorizontal,
         vertical: NavigationConstants.itemMarginVertical,
@@ -45,6 +45,7 @@ class NavigationItem extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min, // Önemli: Minimum boyut kullan
         children: [
           _buildIconContainer(theme),
           SizedBox(height: NavigationConstants.spaceBetweenIconAndText),
@@ -68,26 +69,31 @@ class NavigationItem extends StatelessWidget {
       child: Icon(
         icon,
         color: isSelected ? Colors.white : Colors.grey.shade600,
-        size:
-            isSelected
-                ? NavigationConstants.selectedIconSize
-                : NavigationConstants.unselectedIconSize,
+        size: isSelected
+            ? NavigationConstants.adaptiveSelectedIconSize
+            : NavigationConstants.adaptiveUnselectedIconSize,
       ),
     );
   }
 
   Widget _buildLabel(ThemeData theme) {
-    return AnimatedDefaultTextStyle(
-      duration: NavigationConstants.animationDuration,
-      style: TextStyle(
-        color: isSelected ? theme.primaryColor : Colors.grey.shade600,
-        fontSize:
-            isSelected
-                ? NavigationConstants.selectedFontSize
-                : NavigationConstants.unselectedFontSize,
-        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+    return Flexible( // Flexible widget ekle
+      child: AnimatedDefaultTextStyle(
+        duration: NavigationConstants.animationDuration,
+        style: TextStyle(
+          color: isSelected ? theme.primaryColor : Colors.grey.shade600,
+          fontSize: isSelected
+              ? NavigationConstants.adaptiveSelectedFontSize
+              : NavigationConstants.adaptiveUnselectedFontSize,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+        ),
+        child: Text(
+          label,
+          overflow: TextOverflow.ellipsis, // Taşma durumunda üç nokta
+          maxLines: 1, // Tek satır
+          textAlign: TextAlign.center,
+        ),
       ),
-      child: Text(label),
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EmptyClothesWidget extends StatelessWidget {
-  const EmptyClothesWidget({Key? key}) : super(key: key);
+  const EmptyClothesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class OutfitDetailDialog extends StatelessWidget {
   final Map<String, dynamic> outfit;
 
-  const OutfitDetailDialog({Key? key, required this.outfit}) : super(key: key);
+  const OutfitDetailDialog({super.key, required this.outfit});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class OutfitDetailDialog extends StatelessWidget {
                           ),
                         ),
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               ),

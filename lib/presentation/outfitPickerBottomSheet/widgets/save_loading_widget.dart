@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SaveLoadingWidget extends StatelessWidget {
-  const SaveLoadingWidget({Key? key}) : super(key: key);
+  const SaveLoadingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

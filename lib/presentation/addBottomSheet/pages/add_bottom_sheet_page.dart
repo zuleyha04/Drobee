@@ -23,9 +23,6 @@ class PhotoPickerBottomSheet extends StatelessWidget {
       create: (_) => PhotoPickerCubit(),
       child: BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
         builder: (context, state) {
-          // Debug print: BlocBuilder rebuild kontrolü
-          print('BlocBuilder rebuild, displayImage: ${state.displayImage}');
-
           return Container(
             height: MediaQuery.of(context).size.height * 0.85,
             decoration: BoxDecoration(
@@ -139,7 +136,6 @@ class PhotoPickerBottomSheet extends StatelessWidget {
             right: 8.w,
             child: GestureDetector(
               onTap: () {
-                print("Remove tapped");
                 context.read<PhotoPickerCubit>().removeImage();
               },
               child: Container(

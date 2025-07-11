@@ -33,7 +33,7 @@ class OnBoardingPageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.background),
+      decoration: const BoxDecoration(color: AppColors.background),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
@@ -41,6 +41,7 @@ class OnBoardingPageItem extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               children: [
+                /// Skip butonu
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -48,27 +49,38 @@ class OnBoardingPageItem extends StatelessWidget {
                       SkipButton(onPressed: onSkip),
                   ],
                 ),
+
                 SizedBox(height: 30.h),
+
+                /// Animasyon
                 Expanded(
                   flex: 4,
                   child: OnBoardingAnimation(animationPath: item.animation),
                 ),
-                SizedBox(height: 20.h),
+
+                SizedBox(height: 24.h),
+
+                /// Başlık
                 Text(
                   item.title,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.mainTitleStyle,
                 ),
+
                 SizedBox(height: 10.h),
+
+                /// Alt başlık
                 Text(
                   item.subTitle,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.descriptionTextStyle,
                 ),
-                const Spacer(),
+
+                SizedBox(height: 30.h),
+
+                /// Butonlar
                 if (index == totalPages - 1) ...[
                   CustomButton(text: 'Get Started', onTap: onSignUp),
-                  SizedBox(height: 10.h),
                   LoginTextWidget(
                     onLoginTap: onLogin,
                     text: 'Already have an account ? ',

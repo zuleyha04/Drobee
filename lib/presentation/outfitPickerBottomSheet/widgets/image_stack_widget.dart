@@ -7,10 +7,10 @@ class ImageStackWidget extends StatefulWidget {
   final Function(List<DraggableImageItem>) onImagesChanged;
 
   const ImageStackWidget({
-    Key? key,
+    super.key,
     required this.selectedImages,
     required this.onImagesChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<ImageStackWidget> createState() => _ImageStackWidgetState();

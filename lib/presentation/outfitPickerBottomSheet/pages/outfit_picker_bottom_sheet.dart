@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OutfitPickerBottomSheet extends StatefulWidget {
-  const OutfitPickerBottomSheet({Key? key}) : super(key: key);
+  const OutfitPickerBottomSheet({super.key});
 
   @override
   State<OutfitPickerBottomSheet> createState() =>

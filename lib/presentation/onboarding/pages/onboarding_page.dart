@@ -22,7 +22,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     OnBoardingModel(
       title: 'Digitalize Your Wardrobe!',
       subTitle:
-          'Easily photograph and organize your clothes into categories for instant\naccess anytime.',
+          'Easily photograph and organize your clothes into categories for instant access anytime.',
       animation: 'assets/lottie/animation1.json',
     ),
     OnBoardingModel(

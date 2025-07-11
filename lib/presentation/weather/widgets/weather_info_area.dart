@@ -108,7 +108,7 @@ class WeatherInfoArea extends StatelessWidget {
                               child: Text(
                                 "Items suitable for this weather: ($weatherTag)",
                                 style: TextStyle(
-                                  fontSize: 16.sp,
+                                  fontSize: 15.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

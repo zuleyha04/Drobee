@@ -34,7 +34,6 @@ class HomeCubit extends Cubit<HomeState> {
         emit(state.copyWith(userImages: images));
       },
       onError: (error) {
-        print('Firestore Error: $error');
         emit(state.copyWith(error: 'Data upload error: ${error.toString()}'));
       },
     );

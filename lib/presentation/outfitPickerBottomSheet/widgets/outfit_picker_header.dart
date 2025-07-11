@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OutfitPickerHeader extends StatelessWidget {
-  const OutfitPickerHeader({Key? key}) : super(key: key);
+  const OutfitPickerHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

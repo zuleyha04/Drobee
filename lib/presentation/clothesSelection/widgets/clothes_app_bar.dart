@@ -6,10 +6,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onDonePressed;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     required this.selectedCount,
     required this.onDonePressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

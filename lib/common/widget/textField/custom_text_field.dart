@@ -48,7 +48,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
       builder: (context, child) {
         return Container(
           decoration: BoxDecoration(
-            //FIXME:
             borderRadius: BorderRadius.circular(12),
             gradient:
                 widget.focusNode.hasFocus ? null : AppColors.primaryGradient,
@@ -81,15 +80,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
                             _obscureText
                                 ? Icons.visibility_off
                                 : Icons.visibility,
-                            color:
-                                AppColors.textSecondary, // İKONUN RENGİ SİYAH
+                            color: AppColors.textSecondary,
                           ),
                           onPressed: _toggleObscure,
-                          splashColor: Colors.transparent, // GÖLGEYİ KALDIR
-                          highlightColor:
-                              Colors.transparent, // TIKLAMA EFEKTİNİ KALDIR
-                          hoverColor:
-                              Colors.transparent, // HOVER EFEKTİNİ KALDIR
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
                         )
                         : null,
 

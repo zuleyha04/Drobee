@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StylePage extends StatefulWidget {
-  const StylePage({Key? key}) : super(key: key);
+  const StylePage({super.key});
 
   @override
   State<StylePage> createState() => _StylePageState();

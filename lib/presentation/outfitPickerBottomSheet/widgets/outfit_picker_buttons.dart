@@ -8,11 +8,11 @@ class OutfitPickerButtons extends StatelessWidget {
   final VoidCallback onSaveOutfit;
 
   const OutfitPickerButtons({
-    Key? key,
+    super.key,
     required this.isSaving,
     required this.onSelectClothes,
     required this.onSaveOutfit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

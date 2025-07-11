@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ClothesSelectionPage extends StatefulWidget {
-  const ClothesSelectionPage({Key? key}) : super(key: key);
+  const ClothesSelectionPage({super.key});
 
   @override
   State<ClothesSelectionPage> createState() => _ClothesSelectionPageState();
