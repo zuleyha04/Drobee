@@ -21,12 +21,25 @@ class SettingPage extends StatelessWidget {
               const PageTitle('Settings'),
               SizedBox(height: 24.h),
               if (user != null) ...[
-                Text(
-                  user.email ?? 'No email',
-                  style: TextStyle(fontSize: 18.sp),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 10.h,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8.r),
+                    color: Colors.white,
+                  ),
+                  child: Text(
+                    user.email ?? 'No email',
+                    style: TextStyle(fontSize: 18.sp),
+                  ),
                 ),
                 Divider(height: 32.h),
               ],
+
               const LogoutTile(),
               const DeleteAccountTile(),
               Divider(height: 32.h),
