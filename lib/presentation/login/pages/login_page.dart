@@ -59,7 +59,14 @@ class _LoginPageState extends State<LoginPage> {
         body: BlocConsumer<LoginCubit, LoginState>(
           listener: (context, state) {
             if (state is LoginSuccess) {
-              AppNavigator.pushReplacement(context, HomePage());
+              Navigator.of(context).pushAndRemoveUntil(
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => const HomePage(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+                (route) => false,
+              );
             } else if (state is LoginFailure) {
               AppFlushbar.showError(context, state.error);
             }

@@ -1,4 +1,3 @@
-import 'package:drobee/common/navigator/app_navigator.dart';
 import 'package:drobee/core/utils/app_flushbar.dart';
 import 'package:drobee/data/services/firestore_database_service.dart';
 import 'package:drobee/presentation/onboarding/pages/onboarding_page.dart';
@@ -15,7 +14,7 @@ class DeleteAccountTile extends StatelessWidget {
           (context) => AlertDialog(
             title: const Text('Confirm Deletion'),
             content: const Text(
-              'Are you sure you want to permanently delete your account ?',
+              'Are you sure you want to permanently delete your account?',
             ),
             actions: [
               TextButton(
@@ -35,7 +34,14 @@ class DeleteAccountTile extends StatelessWidget {
         await FirestoreService.deleteCurrentUser();
 
         if (context.mounted) {
-          AppNavigator.pushReplacement(context, OnBoardingPage(initialPage: 3));
+          Navigator.of(context).pushAndRemoveUntil(
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => const OnBoardingPage(initialPage: 3),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+            ),
+            (route) => false,
+          );
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'requires-recent-login') {

@@ -11,7 +11,7 @@ class LogoWidget extends StatelessWidget {
     super.key,
     required this.logoPath,
     this.width = 250,
-    this.height = 300,
+    this.height = 250,
     this.bottomPadding = 60,
   });
 

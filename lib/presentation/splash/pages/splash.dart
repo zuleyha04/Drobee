@@ -1,4 +1,3 @@
-import 'package:drobee/common/navigator/app_navigator.dart';
 import 'package:drobee/core/configs/theme/app_colors.dart';
 import 'package:drobee/presentation/home/pages/home_page.dart';
 import 'package:drobee/presentation/onboarding/pages/onboarding_page.dart';
@@ -14,14 +13,27 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.microtask(() => context.read<SplashCubit>().appStarted());
+    Future.microtask(() {
+      final cubit = context.read<SplashCubit>();
+      cubit.appStarted();
+    });
+
     return BlocListener<SplashCubit, SplashState>(
       listener: (context, state) {
-        if (state is UnAuthenticated) {
-          AppNavigator.pushReplacement(context, OnBoardingPage());
-        } else {
-          AppNavigator.pushReplacement(context, HomePage());
-        }
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (!context.mounted) return;
+          if (state is UnAuthenticated) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const OnBoardingPage()),
+              (route) => false,
+            );
+          } else {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const HomePage()),
+              (route) => false,
+            );
+          }
+        });
       },
       child: Scaffold(
         body: Container(
