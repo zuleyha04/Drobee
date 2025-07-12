@@ -128,8 +128,6 @@ class _OutfitPickerBottomSheetState extends State<OutfitPickerBottomSheet> {
 
       await docRef.set({
         'user_id': userId,
-        'outfit_name':
-            'My Outfit ${DateTime.now().day}/${DateTime.now().month}',
         'outfit_items': outfitItemsData,
         'created_at': FieldValue.serverTimestamp(),
         'updated_at': FieldValue.serverTimestamp(),

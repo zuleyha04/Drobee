@@ -10,7 +10,6 @@ class OutfitDetailDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final outfitItems = outfit['outfit_items'] as List<dynamic>? ?? [];
-    final outfitName = outfit['outfit_name'] as String? ?? 'Unnamed Outfit';
     final outfitId = outfit['id'] as String? ?? '';
 
     return Dialog(
@@ -21,11 +20,6 @@ class OutfitDetailDialog extends StatelessWidget {
         padding: EdgeInsets.all(16.r),
         child: Column(
           children: [
-            Text(
-              outfitName,
-              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16.h),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
