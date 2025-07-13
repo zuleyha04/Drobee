@@ -8,6 +8,7 @@ class AddFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: 'home_tag',
       onPressed: () {
         showModalBottomSheet(
           context: context,

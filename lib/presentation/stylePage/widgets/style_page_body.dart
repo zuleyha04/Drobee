@@ -78,6 +78,7 @@ class _StylePageBodyState extends State<StylePageBody> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'style_tag',
         onPressed: () {
           showModalBottomSheet(
             context: context,
