@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:drobee/presentation/home/models/user_image_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:drobee/presentation/home/cubit/home_cubit.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Eklendi
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ImageCard extends StatelessWidget {
   final UserImageModel image;

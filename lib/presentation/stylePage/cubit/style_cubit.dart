@@ -7,7 +7,7 @@ class StyleCubit extends Cubit<StyleState> {
   void loadOutfits() {
     emit(StyleLoading());
     try {
-      final outfits = <dynamic>[]; // Şimdilik boş liste
+      final outfits = <dynamic>[];
       emit(StyleLoaded(outfits: outfits));
     } catch (e) {
       emit(StyleError(message: e.toString()));

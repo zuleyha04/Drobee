@@ -18,13 +18,13 @@ class DraggableImageItem {
   final String imageUrl;
   Offset position;
   double rotation;
-  double scale; // Yeni eklenen scale özelliği
+  double scale;
 
   DraggableImageItem({
     required this.id,
     required this.imageUrl,
     required this.position,
     required this.rotation,
-    this.scale = 1.0, // Varsayılan değer
+    this.scale = 1.0,
   });
 }

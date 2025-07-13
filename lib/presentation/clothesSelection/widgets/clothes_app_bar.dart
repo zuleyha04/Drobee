@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class ClothesAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int selectedCount;
   final VoidCallback onDonePressed;
 
-  const CustomAppBar({
+  const ClothesAppBar({
     super.key,
     required this.selectedCount,
     required this.onDonePressed,

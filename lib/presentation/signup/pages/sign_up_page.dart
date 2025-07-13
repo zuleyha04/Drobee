@@ -61,7 +61,6 @@ class SignUpPage extends StatelessWidget {
                 const OrDivider(),
                 SizedBox(height: 32.h),
 
-                /// Google butonu bloc ile kontrol ediliyor
                 BlocBuilder<SignupCubit, SignupState>(
                   builder: (context, state) {
                     final isLoading = state is SignupLoading;

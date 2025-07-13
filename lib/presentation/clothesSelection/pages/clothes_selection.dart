@@ -48,7 +48,7 @@ class _ClothesSelectionPageState extends State<ClothesSelectionPage> {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: CustomAppBar(
+            appBar: ClothesAppBar(
               selectedCount: selectedImageIds.length,
               onDonePressed: () => _onDonePressed(context, state),
             ),

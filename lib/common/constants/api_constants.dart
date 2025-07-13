@@ -1,6 +1,6 @@
 class ApiConstants {
   // Remove.bg"
-  static const String removeBgApiKey = 'Sn6jvyWEZb5Q7aAVTxfp4mmF';
+  static const String removeBgApiKey = 'FZXtEPZeH1wx1ApV6F3w5UW8';
   static const String removeBgBaseUrl = 'https://api.remove.bg/v1.0/removebg';
 
   // OpenWeatherMap

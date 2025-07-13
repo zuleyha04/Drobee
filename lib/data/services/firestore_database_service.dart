@@ -47,7 +47,6 @@ class FirestoreService {
     }
   }
 
-  /// Kullanıcının tüm outfit kombinlerini getir
   static Stream<List<Map<String, dynamic>>> getUserOutfitsStream() {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) return const Stream.empty();
@@ -66,7 +65,6 @@ class FirestoreService {
         );
   }
 
-  /// Outfit'i sil
   static Future<void> deleteOutfit(String outfitId) async {
     await _firestore.collection('user_outfits').doc(outfitId).delete();
   }

@@ -14,7 +14,6 @@ class LogoutTile extends StatelessWidget {
         await FirebaseAuth.instance.signOut();
 
         if (context.mounted) {
-          // 🔐 Yönlendirme yapmadan önce animasyonlara zaman tanı!
           Future.delayed(const Duration(milliseconds: 300), () {
             Navigator.of(context).pushAndRemoveUntil(
               PageRouteBuilder(

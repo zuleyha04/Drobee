@@ -75,7 +75,6 @@ class _LoginPageState extends State<LoginPage> {
             if (state is LoginLoading || state is LoginSuccess) {
               return const Center(child: CircularProgressIndicator());
             }
-
             return GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: SafeArea(

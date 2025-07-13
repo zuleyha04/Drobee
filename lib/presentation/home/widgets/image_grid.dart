@@ -2,7 +2,7 @@ import 'package:drobee/presentation/home/widgets/empty_image_placeholder.dart';
 import 'package:drobee/presentation/home/widgets/image_card.dart';
 import 'package:flutter/material.dart';
 import 'package:drobee/presentation/home/cubit/home_state.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Eklendi
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ImageGrid extends StatelessWidget {
   final HomeState state;

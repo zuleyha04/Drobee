@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Eklendi
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EmptyImagePlaceholder extends StatelessWidget {
   const EmptyImagePlaceholder({super.key});
