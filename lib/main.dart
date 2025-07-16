@@ -13,8 +13,6 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await RemoteConfigService.init();
   await RemoteConfigService.forceFetch();
-  print("Key1: ${RemoteConfigService.removeBgKey1}");
-
   runApp(const MyApp());
 }
 
