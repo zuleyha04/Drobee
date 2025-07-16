@@ -19,12 +19,14 @@ class RemoveBgService {
         return null;
       }
 
-      final apiKeys = [
+      // 🔁 Key'leri çekme denemesi: İlk fetch edilmiş key'lerle başla
+      List<String> apiKeys = [
         RemoteConfigService.removeBgKey1,
         RemoteConfigService.removeBgKey2,
       ];
 
-      for (final key in apiKeys) {
+      for (int i = 0; i < apiKeys.length; i++) {
+        final key = apiKeys[i];
         try {
           var request = http.MultipartRequest(
             'POST',
@@ -47,9 +49,18 @@ class RemoveBgService {
             final File processedFile = File(tempPath);
             await processedFile.writeAsBytes(imageBytes);
             return processedFile;
-          } else if (response.statusCode == 402 ||
-              response.statusCode == 403 ||
+          } else if (response.statusCode == 402 || // Payment Required
+              response.statusCode == 403 || // Forbidden
               response.statusCode == 429) {
+            // Too Many Requests
+            // 🔄 Key geçersiz ya da kota dolu → Fetch yap, yeni key'lerle tekrar dene (sadece 1 kez)
+            if (i == 0) {
+              await RemoteConfigService.forceFetch();
+              apiKeys = [
+                RemoteConfigService.removeBgKey1,
+                RemoteConfigService.removeBgKey2,
+              ];
+            }
             continue;
           } else {
             throw Exception(
@@ -60,6 +71,7 @@ class RemoveBgService {
           continue;
         }
       }
+
       AppFlushbar.showError(
         context,
         "Oops! Background removal service limit has been reached. Try again later.",

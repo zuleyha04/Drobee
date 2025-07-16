@@ -4,15 +4,25 @@ class RemoteConfigService {
   static final FirebaseRemoteConfig _remoteConfig =
       FirebaseRemoteConfig.instance;
 
+  // Remote Config başlangıç ayarları
   static Future<void> init() async {
-    await _remoteConfig.setDefaults({
-      'removeBgApiKey1': '',
-      'removeBgApiKey2': '',
-      'weatherApiKey': '',
-      'imageHostApiKey': '',
-    });
+    await _remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: Duration.zero,
+      ),
+    );
+
+    await _remoteConfig.setDefaults(<String, dynamic>{});
 
     await _remoteConfig.fetchAndActivate();
+  }
+
+  // Manuel olarak fetch tetikleme
+  static Future<void> forceFetch() async {
+    try {
+      await _remoteConfig.fetchAndActivate();
+    } catch (e) {}
   }
 
   static String get removeBgKey1 => _remoteConfig.getString('removeBgApiKey1');

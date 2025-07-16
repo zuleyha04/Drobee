@@ -14,12 +14,14 @@ class RemoveBgService {
         throw Exception('File is too large (maximum 12MB)');
       }
 
-      final apiKeys = [
+      List<String> apiKeys = [
         RemoteConfigService.removeBgKey1,
         RemoteConfigService.removeBgKey2,
       ];
 
-      for (final key in apiKeys) {
+      for (int i = 0; i < apiKeys.length; i++) {
+        final key = apiKeys[i];
+
         try {
           var request = http.MultipartRequest(
             'POST',
@@ -46,7 +48,14 @@ class RemoveBgService {
           } else if (response.statusCode == 402 ||
               response.statusCode == 403 ||
               response.statusCode == 429) {
-            // Kota dolmuş olabilir → sıradaki key'e geç
+            // Eğer ilk key ile hata aldıysak → forceFetch ile yeni keyleri al
+            if (i == 0) {
+              await RemoteConfigService.forceFetch();
+              apiKeys = [
+                RemoteConfigService.removeBgKey1,
+                RemoteConfigService.removeBgKey2,
+              ];
+            }
             continue;
           } else {
             throw Exception(
@@ -54,7 +63,6 @@ class RemoveBgService {
             );
           }
         } catch (_) {
-          // Key hatalıysa sıradakine geç
           continue;
         }
       }
