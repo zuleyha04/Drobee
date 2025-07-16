@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:drobee/common/constants/api_constants.dart';
 import 'package:drobee/presentation/weather/model/weather_model.dart';
+import 'package:drobee/data/services/remote_config_service.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
   Future<WeatherModel> getCurrentWeather(String cityName) async {
+    final apiKey = RemoteConfigService.weatherApiKey;
+
     final url =
-        '${ApiConstants.weatherBaseUrl}/weather?q=$cityName&appid=${ApiConstants.weatherApiKey}&units=metric&lang=en';
+        '${ApiConstants.weatherBaseUrl}/weather?q=$cityName&appid=$apiKey&units=metric&lang=en';
 
     try {
       final response = await http.get(Uri.parse(url));
