@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:drobee/common/constants/api_constants.dart';
@@ -19,14 +20,20 @@ class RemoveBgService {
         return null;
       }
 
-      // 🔁 Key'leri çekme denemesi: İlk fetch edilmiş key'lerle başla
       List<String> apiKeys = [
         RemoteConfigService.removeBgKey1,
         RemoteConfigService.removeBgKey2,
+        RemoteConfigService.removeBgKey3,
+        RemoteConfigService.removeBgKey4,
+        RemoteConfigService.removeBgKey5,
       ];
 
       for (int i = 0; i < apiKeys.length; i++) {
         final key = apiKeys[i];
+
+        // Konsola kalan hakları yazdır
+        await _printRemainingCredits(key, i + 1);
+
         try {
           var request = http.MultipartRequest(
             'POST',
@@ -49,16 +56,17 @@ class RemoveBgService {
             final File processedFile = File(tempPath);
             await processedFile.writeAsBytes(imageBytes);
             return processedFile;
-          } else if (response.statusCode == 402 || // Payment Required
-              response.statusCode == 403 || // Forbidden
+          } else if (response.statusCode == 402 ||
+              response.statusCode == 403 ||
               response.statusCode == 429) {
-            // Too Many Requests
-            // 🔄 Key geçersiz ya da kota dolu → Fetch yap, yeni key'lerle tekrar dene (sadece 1 kez)
-            if (i == 0) {
+            if (i == 0 || i == 2) {
               await RemoteConfigService.forceFetch();
               apiKeys = [
                 RemoteConfigService.removeBgKey1,
                 RemoteConfigService.removeBgKey2,
+                RemoteConfigService.removeBgKey3,
+                RemoteConfigService.removeBgKey4,
+                RemoteConfigService.removeBgKey5,
               ];
             }
             continue;
@@ -80,6 +88,49 @@ class RemoveBgService {
     } catch (e) {
       AppFlushbar.showError(context, "Remove.bg error: ${e.toString()}");
       return null;
+    }
+  }
+
+  // Konsola belirtilen API key'in kalan kredilerini yazdırır
+  static Future<void> _printRemainingCredits(
+    String apiKey,
+    int keyIndex,
+  ) async {
+    try {
+      if (apiKey.trim().isEmpty) {
+        print('[Key $keyIndex] API key is empty. Skipping.');
+        return;
+      }
+
+      final uri = Uri.parse('https://api.remove.bg/v1.0/account');
+      final response = await http.get(uri, headers: {'X-Api-Key': apiKey});
+
+      print('[Key $keyIndex] Status Code: ${response.statusCode}');
+      print('[Key $keyIndex] Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+
+        final data = json['data'];
+        final credits = data?['credits'];
+
+        if (credits != null) {
+          final total = credits['total'];
+          final subscription = credits['subscription'];
+          final payg = credits['payg'];
+          print(
+            '[Key $keyIndex] Remaining credits → total: $total, subscription: $subscription, pay-as-you-go: $payg',
+          );
+        } else {
+          print('[Key $keyIndex] Credit info not found in response.');
+        }
+      } else {
+        print(
+          '[Key $keyIndex] Failed to fetch credit info: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('[Key $keyIndex] Error while checking credit info: $e');
     }
   }
 }

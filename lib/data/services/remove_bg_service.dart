@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:drobee/common/constants/api_constants.dart';
@@ -14,13 +15,20 @@ class RemoveBgService {
         throw Exception('File is too large (maximum 12MB)');
       }
 
+      // 5 API KEY kullanımı
       List<String> apiKeys = [
         RemoteConfigService.removeBgKey1,
         RemoteConfigService.removeBgKey2,
+        RemoteConfigService.removeBgKey3,
+        RemoteConfigService.removeBgKey4,
+        RemoteConfigService.removeBgKey5,
       ];
 
       for (int i = 0; i < apiKeys.length; i++) {
         final key = apiKeys[i];
+
+        // Kalan hak bilgisini yazdır
+        await _printRemainingCredits(key, i + 1);
 
         try {
           var request = http.MultipartRequest(
@@ -48,12 +56,14 @@ class RemoveBgService {
           } else if (response.statusCode == 402 ||
               response.statusCode == 403 ||
               response.statusCode == 429) {
-            // Eğer ilk key ile hata aldıysak → forceFetch ile yeni keyleri al
-            if (i == 0) {
+            if (i == 0 || i == 2) {
               await RemoteConfigService.forceFetch();
               apiKeys = [
                 RemoteConfigService.removeBgKey1,
                 RemoteConfigService.removeBgKey2,
+                RemoteConfigService.removeBgKey3,
+                RemoteConfigService.removeBgKey4,
+                RemoteConfigService.removeBgKey5,
               ];
             }
             continue;
@@ -70,6 +80,50 @@ class RemoveBgService {
       throw Exception('All API keys failed or quota exceeded');
     } catch (e) {
       throw Exception('Remove.bg error: $e');
+    }
+  }
+
+  static Future<void> _printRemainingCredits(
+    String apiKey,
+    int keyIndex,
+  ) async {
+    try {
+      if (apiKey.trim().isEmpty) {
+        print('[Key $keyIndex] API key is empty. Skipping.');
+        return;
+      }
+
+      final uri = Uri.parse('https://api.remove.bg/v1.0/account');
+      final response = await http.get(uri, headers: {'X-Api-Key': apiKey});
+
+      print('[Key $keyIndex] Status Code: ${response.statusCode}');
+      print('[Key $keyIndex] Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+
+        final attributes = json['data']?['attributes'];
+        final credits = attributes?['credits'];
+
+        if (credits != null) {
+          final total = credits['total'];
+          final subscription = credits['subscription'];
+          final payg = credits['payg'];
+          final enterprise = credits['enterprise'];
+
+          print(
+            '[Key $keyIndex] Remaining credits → total: $total, subscription: $subscription, pay-as-you-go: $payg, enterprise: $enterprise',
+          );
+        } else {
+          print('[Key $keyIndex] Credit info not found in response.');
+        }
+      } else {
+        print(
+          '[Key $keyIndex] Failed to fetch credit info: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('[Key $keyIndex] Error while checking credit info: $e');
     }
   }
 }
