@@ -5,12 +5,14 @@ class HomeState {
   final bool isLoading;
   final String? error;
   final List<UserImageModel> userImages;
+  final int todayUploadCount;
 
   const HomeState({
     this.email,
     this.isLoading = false,
     this.error,
     this.userImages = const [],
+    this.todayUploadCount = 0,
   });
 
   HomeState copyWith({
@@ -25,5 +27,17 @@ class HomeState {
       error: error ?? this.error,
       userImages: userImages ?? this.userImages,
     );
+  }
+
+  // ✅ Eklediğimiz getter
+  List<UserImageModel> get todayImages {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    return userImages.where((img) {
+      if (img.createdAt != null) {
+        return img.createdAt!.toDate().isAfter(startOfDay);
+      }
+      return false;
+    }).toList();
   }
 }

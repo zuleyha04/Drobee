@@ -31,7 +31,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     _imagesSubscription = _getUserImagesStream(userId).listen(
       (images) {
-        emit(state.copyWith(userImages: images));
+        emit(state.copyWith(userImages: images)); // ✅ userImages güncellendi
       },
       onError: (error) {
         emit(state.copyWith(error: 'Data upload error: ${error.toString()}'));
@@ -45,18 +45,16 @@ class HomeCubit extends Cubit<HomeState> {
         .where('user_id', isEqualTo: userId)
         .snapshots()
         .map((snapshot) {
-          final docs =
-              snapshot.docs.map((doc) {
-                final data = doc.data();
-                return UserImageModel(
-                  id: doc.id,
-                  userId: data['user_id'] ?? '',
-                  imageUrl: data['image_url'] ?? '',
-                  weatherTags: List<String>.from(data['weather_tags'] ?? []),
-                  createdAt: data['created_at'] as Timestamp?,
-                );
-              }).toList();
-          return docs;
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+            return UserImageModel(
+              id: doc.id,
+              userId: data['user_id'] ?? '',
+              imageUrl: data['image_url'] ?? '',
+              weatherTags: List<String>.from(data['weather_tags'] ?? []),
+              createdAt: data['created_at'] as Timestamp?,
+            );
+          }).toList();
         });
   }
 
@@ -81,5 +79,25 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> close() {
     _imagesSubscription?.cancel();
     return super.close();
+  }
+
+  Future<int> getTodayUploadCount() async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) return 0;
+
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+
+    final query =
+        await FirebaseFirestore.instance
+            .collection('user_upload_logs')
+            .where('user_id', isEqualTo: user.uid)
+            .where(
+              'created_at',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
+            )
+            .get();
+
+    return query.docs.length;
   }
 }

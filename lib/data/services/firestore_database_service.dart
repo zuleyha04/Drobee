@@ -16,7 +16,7 @@ class FirestoreService {
       'user_id': userId,
       'image_url': imageUrl,
       'weather_tags': weatherTags,
-      'created_at': FieldValue.serverTimestamp(),
+      'created_at': Timestamp.now(),
     });
   }
 
