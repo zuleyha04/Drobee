@@ -31,7 +31,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     _imagesSubscription = _getUserImagesStream(userId).listen(
       (images) {
-        emit(state.copyWith(userImages: images)); // ✅ userImages güncellendi
+        emit(state.copyWith(userImages: images));
       },
       onError: (error) {
         emit(state.copyWith(error: 'Data upload error: ${error.toString()}'));

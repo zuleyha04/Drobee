@@ -29,7 +29,6 @@ class HomeState {
     );
   }
 
-  // ✅ Eklediğimiz getter
   List<UserImageModel> get todayImages {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);

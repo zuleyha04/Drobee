@@ -14,7 +14,7 @@ class AddFloatingActionButton extends StatelessWidget {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         final todayCount = state.todayImages.length;
-        final limitReached = todayCount >= 2;
+        final limitReached = todayCount >= 3;
 
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -26,7 +26,7 @@ class AddFloatingActionButton extends StatelessWidget {
                   AppFlushbar.showError(
                     context,
                     'You have reached your daily upload limit. Please try again tomorrow.',
-                  ); // 🔸 Kendi flushbar fonksiyonun
+                  );
                 } else {
                   showModalBottomSheet(
                     context: context,
