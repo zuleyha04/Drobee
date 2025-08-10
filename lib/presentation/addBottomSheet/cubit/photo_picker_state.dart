@@ -61,9 +61,9 @@ class PhotoPickerState {
     );
   }
 
-  // Herhangi bir loading durumu var mı kontrol et
+  // Herhangi bir loading durumu var mı kontrolü
   bool get hasAnyLoading => isLoading || isUploading || isProcessing;
 
-  // Gösterilecek resim (öncelik: processedImage, sonra selectedImage)
+  // Gösterilecek resim
   File? get displayImage => processedImage ?? selectedImage;
 }
