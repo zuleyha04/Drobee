@@ -1,4 +1,4 @@
-package com.example.drobee
+package com.drobee.app
 
 import io.flutter.embedding.android.FlutterActivity
 
