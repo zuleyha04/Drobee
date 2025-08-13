@@ -15,7 +15,7 @@ Future<void> main() async {
   await RemoteConfigService.init();
   await RemoteConfigService.forceFetch();
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
   runApp(const MyApp());
 }
@@ -36,6 +36,13 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.appTheme,
           debugShowCheckedModeBanner: false,
           home: const SplashPage(),
+          builder: (context, child) {
+            final bottomInset = MediaQuery.of(context).viewPadding.bottom;
+            return Padding(
+              padding: EdgeInsets.only(bottom: bottomInset),
+              child: child!,
+            );
+          },
         ),
       ),
     );
